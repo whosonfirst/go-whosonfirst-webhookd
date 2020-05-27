@@ -1,5 +1,7 @@
 # go-whosonfirst-webhookd
 
+A Who's On First specific instance of go-webhookd.
+
 ## Important
 
 Work in progress.
