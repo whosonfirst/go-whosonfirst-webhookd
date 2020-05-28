@@ -1,0 +1,23 @@
+{
+    "daemon": "http://localhost:8080?allow_debug=1",
+    "receivers": {
+	"insecure": "insecure://"
+    },	
+    "transformations": {
+	"null": "null://",
+	"chicken": "chicken://zxx",
+	"clucking": "chicken://eng?clucking=true"
+    },
+    "dispatchers": {
+	"null": "null://",
+	"log": "log://"
+    },
+    "webhooks": [
+	{
+	    "endpoint": "/insecure-test",
+	    "receiver": "insecure",
+	    "transformations": [ "chicken" ],
+	    "dispatchers": [ "log" ]
+	}
+    ]
+}
