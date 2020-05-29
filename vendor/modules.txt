@@ -12,13 +12,13 @@ github.com/aaronland/go-roster
 github.com/aaronland/go-string/dsn
 # github.com/aaronland/go-ucd v0.0.0-20190520134908-684059ca9156
 github.com/aaronland/go-ucd
-# github.com/aws/aws-lambda-go v1.10.0
+# github.com/aws/aws-lambda-go v1.17.0
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
 github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
-# github.com/aws/aws-sdk-go v1.31.6
+# github.com/aws/aws-sdk-go v1.26.8
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/awserr
 github.com/aws/aws-sdk-go/aws/awsutil
@@ -37,15 +37,12 @@ github.com/aws/aws-sdk-go/aws/endpoints
 github.com/aws/aws-sdk-go/aws/request
 github.com/aws/aws-sdk-go/aws/session
 github.com/aws/aws-sdk-go/aws/signer/v4
-github.com/aws/aws-sdk-go/internal/context
 github.com/aws/aws-sdk-go/internal/ini
 github.com/aws/aws-sdk-go/internal/sdkio
 github.com/aws/aws-sdk-go/internal/sdkmath
 github.com/aws/aws-sdk-go/internal/sdkrand
 github.com/aws/aws-sdk-go/internal/sdkuri
 github.com/aws/aws-sdk-go/internal/shareddefaults
-github.com/aws/aws-sdk-go/internal/strings
-github.com/aws/aws-sdk-go/internal/sync/singleflight
 github.com/aws/aws-sdk-go/private/protocol
 github.com/aws/aws-sdk-go/private/protocol/json/jsonutil
 github.com/aws/aws-sdk-go/private/protocol/jsonrpc
@@ -76,17 +73,17 @@ github.com/google/go-github/github
 github.com/google/go-querystring/query
 # github.com/googleapis/gax-go v2.0.2+incompatible
 github.com/googleapis/gax-go
-# github.com/jmespath/go-jmespath v0.3.0
+# github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 github.com/jmespath/go-jmespath
 # github.com/sfomuseum/go-flags v0.3.1
 github.com/sfomuseum/go-flags/flagset
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa
-# github.com/whosonfirst/go-webhookd-aws/v2 v2.0.0
+# github.com/whosonfirst/go-webhookd-aws/v2 v2.0.1
 github.com/whosonfirst/go-webhookd-aws/v2
-# github.com/whosonfirst/go-webhookd-github v0.0.0-20200527223110-07b361cbeb55
+# github.com/whosonfirst/go-webhookd-github v1.0.0
 github.com/whosonfirst/go-webhookd-github
-# github.com/whosonfirst/go-webhookd/v3 v3.0.0
+# github.com/whosonfirst/go-webhookd/v3 v3.0.1
 github.com/whosonfirst/go-webhookd/v3
 github.com/whosonfirst/go-webhookd/v3/config
 github.com/whosonfirst/go-webhookd/v3/daemon
@@ -122,7 +119,7 @@ gocloud.dev/runtimevar/driver
 gocloud.dev/runtimevar/filevar
 gocloud.dev/secrets
 gocloud.dev/secrets/driver
-# golang.org/x/net v0.0.0-20200202094626-16171245cfb2
+# golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack

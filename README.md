@@ -4,10 +4,10 @@ A Who's On First specific instance of go-webhookd.
 
 ## Important
 
-Work in progress.
+Documentation to follow.
 
 ## See also
 
-* https://github.com/whosonfirst/go-webhookd/tree/v3
+* https://github.com/whosonfirst/go-webhookd
+* https://github.com/whosonfirst/go-webhookd-aws
 * https://github.com/whosonfirst/go-webhookd-github
-* https://github.com/whosonfirst/go-webhookd-aws/tree/v2
