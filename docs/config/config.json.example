@@ -7,17 +7,19 @@
 	"null": "null://",
 	"chicken": "chicken://zxx",
 	"clucking": "chicken://eng?clucking=true"
+	"commits": "githubcommits://",
     },
     "dispatchers": {
 	"null": "null://",
-	"log": "log://"
+	"log": "log://",
+	"blob": "fileblob:///usr/local/data/webhookd/",
     },
     "webhooks": [
 	{
 	    "endpoint": "/insecure-test",
 	    "receiver": "insecure",
-	    "transformations": [ "chicken" ],
-	    "dispatchers": [ "log" ]
+	    "transformations": [ "commits" ],
+	    "dispatchers": [ "log", "blob" ]
 	}
     ]
 }
