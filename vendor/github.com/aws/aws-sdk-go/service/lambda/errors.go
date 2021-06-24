@@ -2,13 +2,31 @@
 
 package lambda
 
+import (
+	"github.com/aws/aws-sdk-go/private/protocol"
+)
+
 const (
+
+	// ErrCodeCodeSigningConfigNotFoundException for service response error code
+	// "CodeSigningConfigNotFoundException".
+	//
+	// The specified code signing configuration does not exist.
+	ErrCodeCodeSigningConfigNotFoundException = "CodeSigningConfigNotFoundException"
 
 	// ErrCodeCodeStorageExceededException for service response error code
 	// "CodeStorageExceededException".
 	//
 	// You have exceeded your maximum total code size per account. Learn more (https://docs.aws.amazon.com/lambda/latest/dg/limits.html)
 	ErrCodeCodeStorageExceededException = "CodeStorageExceededException"
+
+	// ErrCodeCodeVerificationFailedException for service response error code
+	// "CodeVerificationFailedException".
+	//
+	// The code signature failed one or more of the validation checks for signature
+	// mismatch or expiry, and the code signing policy is set to ENFORCE. Lambda
+	// blocks the deployment.
+	ErrCodeCodeVerificationFailedException = "CodeVerificationFailedException"
 
 	// ErrCodeEC2AccessDeniedException for service response error code
 	// "EC2AccessDeniedException".
@@ -30,6 +48,32 @@ const (
 	// the Lambda function.
 	ErrCodeEC2UnexpectedException = "EC2UnexpectedException"
 
+	// ErrCodeEFSIOException for service response error code
+	// "EFSIOException".
+	//
+	// An error occured when reading from or writing to a connected file system.
+	ErrCodeEFSIOException = "EFSIOException"
+
+	// ErrCodeEFSMountConnectivityException for service response error code
+	// "EFSMountConnectivityException".
+	//
+	// The function couldn't make a network connection to the configured file system.
+	ErrCodeEFSMountConnectivityException = "EFSMountConnectivityException"
+
+	// ErrCodeEFSMountFailureException for service response error code
+	// "EFSMountFailureException".
+	//
+	// The function couldn't mount the configured file system due to a permission
+	// or configuration issue.
+	ErrCodeEFSMountFailureException = "EFSMountFailureException"
+
+	// ErrCodeEFSMountTimeoutException for service response error code
+	// "EFSMountTimeoutException".
+	//
+	// The function was able to make a network connection to the configured file
+	// system, but the mount operation timed out.
+	ErrCodeEFSMountTimeoutException = "EFSMountTimeoutException"
+
 	// ErrCodeENILimitReachedException for service response error code
 	// "ENILimitReachedException".
 	//
@@ -37,6 +81,13 @@ const (
 	// specified as part of Lambda function configuration, because the limit for
 	// network interfaces has been reached.
 	ErrCodeENILimitReachedException = "ENILimitReachedException"
+
+	// ErrCodeInvalidCodeSignatureException for service response error code
+	// "InvalidCodeSignatureException".
+	//
+	// The code signature failed the integrity check. Lambda always blocks deployment
+	// if the integrity check fails, even if code signing policy is set to WARN.
+	ErrCodeInvalidCodeSignatureException = "InvalidCodeSignatureException"
 
 	// ErrCodeInvalidParameterValueException for service response error code
 	// "InvalidParameterValueException".
@@ -182,3 +233,40 @@ const (
 	// The content type of the Invoke request body is not JSON.
 	ErrCodeUnsupportedMediaTypeException = "UnsupportedMediaTypeException"
 )
+
+var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
+	"CodeSigningConfigNotFoundException":            newErrorCodeSigningConfigNotFoundException,
+	"CodeStorageExceededException":                  newErrorCodeStorageExceededException,
+	"CodeVerificationFailedException":               newErrorCodeVerificationFailedException,
+	"EC2AccessDeniedException":                      newErrorEC2AccessDeniedException,
+	"EC2ThrottledException":                         newErrorEC2ThrottledException,
+	"EC2UnexpectedException":                        newErrorEC2UnexpectedException,
+	"EFSIOException":                                newErrorEFSIOException,
+	"EFSMountConnectivityException":                 newErrorEFSMountConnectivityException,
+	"EFSMountFailureException":                      newErrorEFSMountFailureException,
+	"EFSMountTimeoutException":                      newErrorEFSMountTimeoutException,
+	"ENILimitReachedException":                      newErrorENILimitReachedException,
+	"InvalidCodeSignatureException":                 newErrorInvalidCodeSignatureException,
+	"InvalidParameterValueException":                newErrorInvalidParameterValueException,
+	"InvalidRequestContentException":                newErrorInvalidRequestContentException,
+	"InvalidRuntimeException":                       newErrorInvalidRuntimeException,
+	"InvalidSecurityGroupIDException":               newErrorInvalidSecurityGroupIDException,
+	"InvalidSubnetIDException":                      newErrorInvalidSubnetIDException,
+	"InvalidZipFileException":                       newErrorInvalidZipFileException,
+	"KMSAccessDeniedException":                      newErrorKMSAccessDeniedException,
+	"KMSDisabledException":                          newErrorKMSDisabledException,
+	"KMSInvalidStateException":                      newErrorKMSInvalidStateException,
+	"KMSNotFoundException":                          newErrorKMSNotFoundException,
+	"PolicyLengthExceededException":                 newErrorPolicyLengthExceededException,
+	"PreconditionFailedException":                   newErrorPreconditionFailedException,
+	"ProvisionedConcurrencyConfigNotFoundException": newErrorProvisionedConcurrencyConfigNotFoundException,
+	"RequestTooLargeException":                      newErrorRequestTooLargeException,
+	"ResourceConflictException":                     newErrorResourceConflictException,
+	"ResourceInUseException":                        newErrorResourceInUseException,
+	"ResourceNotFoundException":                     newErrorResourceNotFoundException,
+	"ResourceNotReadyException":                     newErrorResourceNotReadyException,
+	"ServiceException":                              newErrorServiceException,
+	"SubnetIPAddressLimitReachedException":          newErrorSubnetIPAddressLimitReachedException,
+	"TooManyRequestsException":                      newErrorTooManyRequestsException,
+	"UnsupportedMediaTypeException":                 newErrorUnsupportedMediaTypeException,
+}
