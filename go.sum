@@ -371,6 +371,8 @@ github.com/whosonfirst/go-webhookd-github v1.0.1 h1:JhJEVTjwooUq5OxkXH6G88IJ+PSZ
 github.com/whosonfirst/go-webhookd-github v1.0.1/go.mod h1:5irlBFGRk9oRiVU0YDFOwOoeuxsfj/ISUHoDnmLJbbY=
 github.com/whosonfirst/go-webhookd-gocloud v0.0.0-20210624154541-2fc06298c125 h1:zvtgYfrkee+3Q2gI9yiWOEys/wgeoohpIfTRtxQKGCg=
 github.com/whosonfirst/go-webhookd-gocloud v0.0.0-20210624154541-2fc06298c125/go.mod h1:WkufZfQ+VcNoV7B1KbGKoRBthTTUdPHjelrnfr4kRb8=
+github.com/whosonfirst/go-webhookd-gocloud v0.0.1 h1:xOoJRH54MaVyxrz8PSETYAApV6669FGdOjC/dr6QsN4=
+github.com/whosonfirst/go-webhookd-gocloud v0.0.1/go.mod h1:WkufZfQ+VcNoV7B1KbGKoRBthTTUdPHjelrnfr4kRb8=
 github.com/whosonfirst/go-webhookd/v3 v3.0.0 h1:wnBKaOU75HAYdS29R8BHpPb/pl24TiX2oFGPts0+kqo=
 github.com/whosonfirst/go-webhookd/v3 v3.0.0/go.mod h1:a4RlfZkEEgs2HZV73IvxdD6huHQ5gWoYeuaX8JRHOAI=
 github.com/whosonfirst/go-webhookd/v3 v3.0.1 h1:k+1PloYWuyPKfTkIr+q8eoMdy2AzuAUV/ec72vCi3ZA=
