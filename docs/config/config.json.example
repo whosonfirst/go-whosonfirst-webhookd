@@ -12,7 +12,7 @@
     "dispatchers": {
 	"null": "null://",
 	"log": "log://",
-	"blob": "file:///usr/local/data/webhookd/?metadata=skip"
+	"blob": "file:///usr/local/data/webhookd/?metadata=skip&dispatch_prefix=_ts_"
     },
     "webhooks": [
 	{

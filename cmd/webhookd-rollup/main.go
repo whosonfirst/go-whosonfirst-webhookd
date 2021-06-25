@@ -29,7 +29,7 @@ func RollupAndProcess(ctx context.Context, bucket *blob.Bucket, pr process.Proce
 
 	for repo, files := range c.Commits() {
 
-		err := pr.Process(ctx, repo, files)
+		err := pr.Process(ctx, repo, files...)
 
 		if err != nil {
 			return err
@@ -47,7 +47,7 @@ func main() {
 
 	bucket_uri := fs.String("bucket-uri", "", "A valid gocloud.dev/blob (bucket) URI.")
 
-	processor_uri := fs.String("processor-uri", "", "...")
+	processor_uri := fs.String("processor-uri", "stdout://", "...")
 
 	flagset.Parse(fs)
 

@@ -6,7 +6,7 @@ import (
 	"io"
 )
 
-// Rollup takes all the files in 'bucket'
+// Rollup takes all the files in 'bucket' and returns a Catalog instance.
 func RollupBucket(ctx context.Context, bucket *blob.Bucket) (*Catalog, error) {
 
 	c, err := NewCatalog()

@@ -10,7 +10,7 @@ import (
 )
 
 type Processor interface {
-	Process(context.Context, string, []string) error
+	Process(context.Context, string, ...string) error
 }
 
 type ProcessorInitializeFunc func(ctx context.Context, uri string) (Processor, error)

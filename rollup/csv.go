@@ -9,6 +9,14 @@ import (
 
 func ProcessCSVFile(ctx context.Context, c *Catalog, fh io.Reader) error {
 
+	/*
+
+		To do: Read fh in to bytes and hash the body and check to see whether
+		we've processed this file already. If not create a BytesReader and pass
+		that to the CSV reader.
+
+	*/
+
 	csv_r := csv.NewReader(fh)
 
 	for {
