@@ -1,3 +1,11 @@
+CWD=$(shell pwd)
+
+debug:
+	go run -mod vendor cmd/webhookd/main.go -config-uri 'file://$(CWD)/docs/config/config.json.example?decoder=string'
+
+debug-post:
+	curl -v 'http://localhost:8080/insecure-test?debug=1' -d @docs/events/flights.json
+
 lambda-config:
 	go run cmd/webhookd-flatten-config/main.go -config $(CONFIG) -constvar | pbcopy
 

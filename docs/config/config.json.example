@@ -6,13 +6,13 @@
     "transformations": {
 	"null": "null://",
 	"chicken": "chicken://zxx",
-	"clucking": "chicken://eng?clucking=true"
-	"commits": "githubcommits://",
+	"clucking": "chicken://eng?clucking=true",
+	"commits": "githubcommits://"
     },
     "dispatchers": {
 	"null": "null://",
 	"log": "log://",
-	"blob": "fileblob:///usr/local/data/webhookd/",
+	"blob": "file:///usr/local/data/webhookd/"
     },
     "webhooks": [
 	{
