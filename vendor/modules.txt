@@ -10,6 +10,7 @@ github.com/aaronland/go-cloud-s3blob
 # github.com/aaronland/go-http-server v0.0.6
 github.com/aaronland/go-http-server
 # github.com/aaronland/go-roster v0.0.2
+## explicit
 github.com/aaronland/go-roster
 # github.com/aaronland/go-string v0.1.2
 github.com/aaronland/go-string/dsn
@@ -18,6 +19,7 @@ github.com/aaronland/go-ucd/v13
 github.com/aaronland/go-ucd/v13/unicodedata
 github.com/aaronland/go-ucd/v13/unihan
 # github.com/aws/aws-lambda-go v1.24.0
+## explicit
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
