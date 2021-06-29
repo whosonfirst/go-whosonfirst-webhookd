@@ -13,7 +13,7 @@
 	"null": "null://",
 	"log": "log://",
 	"blob": "file:///tmp/webhookd/?metadata=skip",
-	"repo": "findingaid-repo://?cache=file:///tmp/findingaid"
+	"repo": "findingaid-repo://?cache=file:///tmp/findingaid/"
     },
     "webhooks": [
 	{
