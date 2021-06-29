@@ -4,9 +4,6 @@ github.com/aaronland/go-aws-session
 github.com/aaronland/go-chicken
 github.com/aaronland/go-chicken/emoji
 github.com/aaronland/go-chicken/strings
-# github.com/aaronland/go-cloud-s3blob v0.2.1
-## explicit
-github.com/aaronland/go-cloud-s3blob
 # github.com/aaronland/go-http-server v0.0.6
 github.com/aaronland/go-http-server
 # github.com/aaronland/go-json-query v0.1.0
@@ -19,6 +16,9 @@ github.com/aaronland/go-string/dsn
 github.com/aaronland/go-ucd/v13
 github.com/aaronland/go-ucd/v13/unicodedata
 github.com/aaronland/go-ucd/v13/unihan
+# github.com/aaronland/gocloud-blob-s3 v0.1.0
+## explicit
+github.com/aaronland/gocloud-blob-s3
 # github.com/aws/aws-lambda-go v1.24.0
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda

@@ -6,7 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/aaronland/go-cloud-s3blob"
+	"github.com/aaronland/gocloud-blob-s3"
 	cache_blob "github.com/whosonfirst/go-cache-blob"
 	webhookd "github.com/whosonfirst/go-webhookd/v3"
 	webhookd_dispatcher "github.com/whosonfirst/go-webhookd/v3/dispatcher"

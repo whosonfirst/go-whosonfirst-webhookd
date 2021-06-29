@@ -124,6 +124,8 @@ github.com/aaronland/go-ucd v0.0.0-20190520134908-684059ca9156 h1:SsNFRFNm6Gn8Dg
 github.com/aaronland/go-ucd v0.0.0-20190520134908-684059ca9156/go.mod h1:DoKBDoY4iuDSNErkKy6n1SRdUEOLwTm2gy7X3GtUQaI=
 github.com/aaronland/go-ucd/v13 v13.0.0 h1:+pKeJj2KG4uSoEAjl3dfUMK9bnyxB0aI2RJu7nO4THQ=
 github.com/aaronland/go-ucd/v13 v13.0.0/go.mod h1:VhXooaIYT3dVPSHMRLGvmF6CtiV1pdmi0RUEomjoS/s=
+github.com/aaronland/gocloud-blob-s3 v0.1.0 h1:pytPBr+ypLDZYqTjoVbdf4cPmlEYQ03LW8NkjsynruM=
+github.com/aaronland/gocloud-blob-s3 v0.1.0/go.mod h1:lp5o6UdndyGn0M+oIZEG98eip+T71vL+U8P8WQUe0UE=
 github.com/akrylysov/algnhsa v0.0.0-20190319020909-05b3d192e9a7/go.mod h1:HhzjNA0EjUWcwHTUMwqrpeAdIF3gRmpH0HpWx1hYJSc=
 github.com/aws/aws-lambda-go v1.9.0/go.mod h1:zUsUQhAUjYzR8AuduJPCfhBuKWUaDbQiPOG+ouzmE1A=
 github.com/aws/aws-lambda-go v1.10.0 h1:uafgdfYGQD0UeT7d2uKdyWW8j/ZYRifRPIdmeqLzLCk=

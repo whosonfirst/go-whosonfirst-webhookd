@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/aaronland/go-cloud-s3blob"                  // necessary for blob dispatcher and the findingaid-repo dispatcher (by way of the go-whosonfirst-findingaid cache)
+	_ "github.com/aaronland/gocloud-blob-s3"                  // necessary for blob dispatcher and the findingaid-repo dispatcher (by way of the go-whosonfirst-findingaid cache)
 	_ "github.com/whosonfirst/go-cache-blob"                  // necessary for findingaid-repo dispatcher
 	_ "github.com/whosonfirst/go-whosonfirst-findingaid/repo" // necessary for findingaid-repo dispatcher
 	_ "gocloud.dev/blob/fileblob"                             // necessary for blob dispatcher
