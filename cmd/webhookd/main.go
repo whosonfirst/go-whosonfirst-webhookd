@@ -8,7 +8,7 @@ import (
 )
 
 import (
-	_ "github.com/whosonfirst/go-webhookd-aws/v2"
+	_ "github.com/whosonfirst/go-webhookd-aws/v2"			// defines the lambda dispatcher
 	_ "github.com/whosonfirst/go-webhookd-github"			// defines the github* transformations
 	_ "github.com/whosonfirst/go-webhookd-gocloud"			// defines the blob dispatcher
 	_ "github.com/whosonfirst/go-whosonfirst-webhookd/dispatcher"	// defines the findingaid-repo dispatcher
