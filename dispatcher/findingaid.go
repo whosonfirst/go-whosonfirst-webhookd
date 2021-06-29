@@ -13,15 +13,10 @@ import (
 	"io"
 )
 
-type Feature struct {
-	Type       string                 `json:"type"`
-	Properties map[string]interface{} `json:"properties"`
-}
-
 func init() {
 
 	ctx := context.Background()
-	err := webhookd_dispatcher.RegisterDispatcher(ctx, "null", NewFindingAidDispatcher)
+	err := webhookd_dispatcher.RegisterDispatcher(ctx, "findingaid", NewFindingAidDispatcher)
 
 	if err != nil {
 		panic(err)
@@ -91,6 +86,11 @@ func (d *FindingAidDispatcher) dispatchRow(ctx context.Context, row []string) er
 
 	// Basically we spoofing something that can be read by
 	// go-whosonfirst-findingaid/repo.FindingAidResponseFromReader
+
+	type Feature struct {
+		Type       string                 `json:"type"`
+		Properties map[string]interface{} `json:"properties"`
+	}
 
 	props := map[string]interface{}{
 		"wof:id":   id,
