@@ -6,12 +6,18 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	cache_blob "github.com/whosonfirst/go-cache-blob"
 	webhookd "github.com/whosonfirst/go-webhookd/v3"
 	webhookd_dispatcher "github.com/whosonfirst/go-webhookd/v3/dispatcher"
 	"github.com/whosonfirst/go-whosonfirst-findingaid"
 	"github.com/whosonfirst/go-whosonfirst-uri"
+	"gocloud.dev/blob"
 	"io"
+	"log"
 	"net/url"
+	_ "sync"
 )
 
 func init() {
@@ -30,6 +36,7 @@ func init() {
 type FindingAidRepoDispatcher struct {
 	webhookd.WebhookDispatcher
 	indexer findingaid.Indexer
+	acl     string
 }
 
 func NewFindingAidRepoDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatcher, error) {
@@ -65,8 +72,11 @@ func NewFindingAidRepoDispatcher(ctx context.Context, uri string) (webhookd.Webh
 		return nil, fmt.Errorf("Failed to create indexer for '%s', %w", idx_uri, err)
 	}
 
+	acl := q.Get("acl")
+
 	d := FindingAidRepoDispatcher{
 		indexer: indexer,
+		acl:     acl,
 	}
 
 	return &d, nil
@@ -76,12 +86,72 @@ func NewFindingAidRepoDispatcher(ctx context.Context, uri string) (webhookd.Webh
 // package and updates (or creates) a corresponding go-whosonfirst-findingaid record for each row.
 func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.WebhookError {
 
+	// START OF S3 permissions stuff
+
+	if d.acl != "" {
+
+		before := func(asFunc func(interface{}) bool) error {
+
+			req := &s3manager.UploadInput{}
+			ok := asFunc(&req)
+
+			if !ok {
+				return fmt.Errorf("invalid s3 type")
+			}
+
+			req.ACL = aws.String(d.acl)
+			return nil
+		}
+
+		wr_opts := blob.WriterOptions{
+			BeforeWrite: before,
+		}
+
+		log.Println("SET ACL", d.acl)
+		// This gets retrieved in whosonfirst/go-cache-blob.Set()
+		ctx = context.WithValue(ctx, cache_blob.BlobCacheOptionsKey("options"), wr_opts)
+	}
+
+	// END OF S3 permissions stuff
+
 	br := bytes.NewReader(body)
 	csv_r := csv.NewReader(br)
 
-	// TBD: Do this concurrently ?
-	
+	/*
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+
+		var dispatch_err error
+
+		err_ch := make(chan error)
+		done_ch := make(chan bool)
+
+		wg := new(sync.WaitGroup)
+
+		go func() {
+
+			select {
+			case err := <-err_ch:
+				log.Printf("Dispatch error: %v\n", err)
+				dispatch_err = err
+				cancel()
+			case <-done_ch:
+				return
+			default:
+				// pass
+			}
+		}()
+	*/
+
 	for {
+
+		select {
+		case <-ctx.Done():
+			break
+		default:
+			// pass
+		}
+
 		row, err := csv_r.Read()
 
 		if err == io.EOF {
@@ -97,12 +167,46 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 		if err != nil {
 			return &webhookd.WebhookError{Code: 999, Message: err.Error()}
 		}
+
+		/*
+			wg.Add(1)
+
+			go func(row []string) {
+
+				defer wg.Done()
+				err = d.dispatchRow(ctx, row)
+
+				if err != nil {
+					err_ch <- fmt.Errorf("Failed to displatch row, %w", err)
+					return
+				}
+
+				log.Printf("Wrote %s\n", row[2])
+			}(row)
+		*/
 	}
+
+	/*
+		wg.Wait()
+
+		done_ch <- true
+
+		if dispatch_err != nil {
+			return &webhookd.WebhookError{Code: 999, Message: dispatch_err.Error()}
+		}
+	*/
 
 	return nil
 }
 
 func (d *FindingAidRepoDispatcher) dispatchRow(ctx context.Context, row []string) error {
+
+	select {
+	case <-ctx.Done():
+		return nil
+	default:
+		// pass
+	}
 
 	count_cols := len(row)
 	count_expected := 3
@@ -126,7 +230,7 @@ func (d *FindingAidRepoDispatcher) dispatchRow(ctx context.Context, row []string
 
 	// Basically we spoofing something that can be read by
 	// go-whosonfirst-findingaid/repo.FindingAidResponseFromReader
-	
+
 	type Feature struct {
 		Type       string                 `json:"type"`
 		Properties map[string]interface{} `json:"properties"`

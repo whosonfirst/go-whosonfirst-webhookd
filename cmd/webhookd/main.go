@@ -1,17 +1,17 @@
 package main
 
 import (
-	_ "github.com/aaronland/go-cloud-s3blob"			// necessary for blob dispatcher
-	_ "gocloud.dev/blob/fileblob"					// necessary for blob dispatcher
-	_ "github.com/whosonfirst/go-whosonfirst-findingaid/repo"	// necessary for findingaid-repo dispatcher
-	_ "github.com/whosonfirst/go-cache-blob"			// necessary for findingaid-repo dispatcher
+	_ "github.com/aaronland/go-cloud-s3blob"                  // necessary for blob dispatcher and the findingaid-repo dispatcher (by way of the go-whosonfirst-findingaid cache)
+	_ "github.com/whosonfirst/go-cache-blob"                  // necessary for findingaid-repo dispatcher
+	_ "github.com/whosonfirst/go-whosonfirst-findingaid/repo" // necessary for findingaid-repo dispatcher
+	_ "gocloud.dev/blob/fileblob"                             // necessary for blob dispatcher
 )
 
 import (
-	_ "github.com/whosonfirst/go-webhookd-aws/v2"			// defines the lambda dispatcher
-	_ "github.com/whosonfirst/go-webhookd-github"			// defines the github* transformations
-	_ "github.com/whosonfirst/go-webhookd-gocloud"			// defines the blob dispatcher
-	_ "github.com/whosonfirst/go-whosonfirst-webhookd/dispatcher"	// defines the findingaid-repo dispatcher
+	_ "github.com/whosonfirst/go-webhookd-aws/v2"                 // defines the lambda dispatcher
+	_ "github.com/whosonfirst/go-webhookd-github"                 // defines the github* transformations
+	_ "github.com/whosonfirst/go-webhookd-gocloud"                // defines the blob dispatcher
+	_ "github.com/whosonfirst/go-whosonfirst-webhookd/dispatcher" // defines the findingaid-repo dispatcher
 )
 
 import (

@@ -13,7 +13,8 @@
 	"null": "null://",
 	"log": "log://",
 	"blob": "file:///tmp/webhookd/?metadata=skip",
-	"repo": "findingaid-repo://?cache=file:///tmp/findingaid/"
+	"repo-local": "findingaid-repo://?cache=file:///tmp/findingaid/",
+	"repo-s3": "findingaid-repo://?cache=s3blob%3A%2F%2Fsfomuseum-data%3Fregion%3Dus-west-2%26prefix%3Dfindingaid-debug%2F%26credentials%3Dsession"	
     },
     "webhooks": [
 	{
@@ -26,7 +27,7 @@
 	    "endpoint": "/findingaid-test",
 	    "receiver": "insecure",
 	    "transformations": [ "commits" ],
-	    "dispatchers": [ "log", "repo" ]
+	    "dispatchers": [ "log", "repo-s3" ]
 	}		
     ]
 }
