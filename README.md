@@ -4,7 +4,7 @@ A Who's On First specific instance of go-webhookd.
 
 ## Important
 
-Documentation to follow. For now, take a look at the `debug` and `debug-post` targets in the [Makefile](Makefile).
+Documentation to follow. For now, take a look at the `debug` and `debug-*` targets in the [Makefile](Makefile) as well as the [example config file](docs/config/config.json.example).
 
 ## See also
 
