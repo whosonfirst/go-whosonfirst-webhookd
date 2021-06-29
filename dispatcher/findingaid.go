@@ -17,7 +17,6 @@ import (
 	"io"
 	"log"
 	"net/url"
-	_ "sync"
 )
 
 func init() {
@@ -86,8 +85,12 @@ func NewFindingAidRepoDispatcher(ctx context.Context, uri string) (webhookd.Webh
 // package and updates (or creates) a corresponding go-whosonfirst-findingaid record for each row.
 func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.WebhookError {
 
+	log.Println("DISPATCH", d.acl)
+	
 	// START OF S3 permissions stuff
-
+	// This should really be moved in to a generic method like:
+	// ctx = SetACLContextForS3Blob(ctx, "relevent-key-name", acl)
+	
 	if d.acl != "" {
 
 		before := func(asFunc func(interface{}) bool) error {
@@ -103,11 +106,10 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 			return nil
 		}
 
-		wr_opts := blob.WriterOptions{
+		wr_opts := &blob.WriterOptions{
 			BeforeWrite: before,
 		}
 
-		log.Println("SET ACL", d.acl)
 		// This gets retrieved in whosonfirst/go-cache-blob.Set()
 		ctx = context.WithValue(ctx, cache_blob.BlobCacheOptionsKey("options"), wr_opts)
 	}
@@ -116,32 +118,6 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 
 	br := bytes.NewReader(body)
 	csv_r := csv.NewReader(br)
-
-	/*
-		ctx, cancel := context.WithCancel(ctx)
-		defer cancel()
-
-		var dispatch_err error
-
-		err_ch := make(chan error)
-		done_ch := make(chan bool)
-
-		wg := new(sync.WaitGroup)
-
-		go func() {
-
-			select {
-			case err := <-err_ch:
-				log.Printf("Dispatch error: %v\n", err)
-				dispatch_err = err
-				cancel()
-			case <-done_ch:
-				return
-			default:
-				// pass
-			}
-		}()
-	*/
 
 	for {
 
@@ -167,34 +143,7 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 		if err != nil {
 			return &webhookd.WebhookError{Code: 999, Message: err.Error()}
 		}
-
-		/*
-			wg.Add(1)
-
-			go func(row []string) {
-
-				defer wg.Done()
-				err = d.dispatchRow(ctx, row)
-
-				if err != nil {
-					err_ch <- fmt.Errorf("Failed to displatch row, %w", err)
-					return
-				}
-
-				log.Printf("Wrote %s\n", row[2])
-			}(row)
-		*/
 	}
-
-	/*
-		wg.Wait()
-
-		done_ch <- true
-
-		if dispatch_err != nil {
-			return &webhookd.WebhookError{Code: 999, Message: dispatch_err.Error()}
-		}
-	*/
 
 	return nil
 }
