@@ -1,6 +1,8 @@
 CWD=$(shell pwd)
 
 debug:
+	# if test !-d /tmp/webhookd; then mkdir /tmp/webhookd; fi
+	# if test !-d /tmp/findingaid; them mkdir /tmp/findingaid; fi
 	go run -mod vendor cmd/webhookd/main.go -config-uri 'file://$(CWD)/docs/config/config.json.example?decoder=string'
 
 debug-post:

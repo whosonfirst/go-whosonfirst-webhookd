@@ -3,6 +3,8 @@ package main
 import (
 	_ "github.com/aaronland/go-cloud-s3blob"
 	_ "gocloud.dev/blob/fileblob"
+	_ "github.com/whosonfirst/go-whosonfirst-findingaid/repo"
+	_ "github.com/whosonfirst/go-cache-blob"
 )
 
 import (

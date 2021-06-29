@@ -12,8 +12,8 @@
     "dispatchers": {
 	"null": "null://",
 	"log": "log://",
-	"blob": "file:///usr/local/data/webhookd/?metadata=skip",
-	"repo": "findingaid-repo://?cache=null://"
+	"blob": "file:///tmp/webhookd/?metadata=skip",
+	"repo": "findingaid-repo://?cache=file:///tmp/findingaid"
     },
     "webhooks": [
 	{
