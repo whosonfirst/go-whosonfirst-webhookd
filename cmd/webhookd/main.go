@@ -1,14 +1,14 @@
 package main
 
 import (
+	_ "github.com/aaronland/go-cloud-s3blob"
 	_ "gocloud.dev/blob/fileblob"
-	_ "github.com/aaronland/go-cloud-s3blob"	
 )
 
 import (
+	_ "github.com/whosonfirst/go-webhookd-aws/v2"
 	_ "github.com/whosonfirst/go-webhookd-github"
-	_ "github.com/whosonfirst/go-webhookd-gocloud"	
-	_ "github.com/whosonfirst/go-webhookd-aws/v2"	
+	_ "github.com/whosonfirst/go-webhookd-gocloud"
 )
 
 import (
