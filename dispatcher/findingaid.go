@@ -11,6 +11,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-findingaid"
 	"github.com/whosonfirst/go-whosonfirst-uri"
 	"io"
+	"net/url"
 )
 
 func init() {
@@ -30,7 +31,26 @@ type FindingAidDispatcher struct {
 
 func NewFindingAidDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatcher, error) {
 
-	d := FindingAidDispatcher{}
+	u, err := url.Parse(uri)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to parse URI, %w", err)
+	}
+
+	q := u.Query()
+
+	indexer_uri := q.Get("indexer")
+
+	indexer, err := findingaid.NewIndexer(ctx, indexer_uri)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to create indexer for '%s', %w", indexer_uri, err)
+	}
+
+	d := FindingAidDispatcher{
+		indexer: indexer,
+	}
+
 	return &d, nil
 }
 
