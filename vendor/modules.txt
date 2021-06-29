@@ -107,7 +107,7 @@ github.com/whosonfirst/go-webhookd-aws/v2
 # github.com/whosonfirst/go-webhookd-github v1.0.1
 ## explicit
 github.com/whosonfirst/go-webhookd-github
-# github.com/whosonfirst/go-webhookd-gocloud v0.0.1
+# github.com/whosonfirst/go-webhookd-gocloud v0.0.4
 ## explicit
 github.com/whosonfirst/go-webhookd-gocloud
 # github.com/whosonfirst/go-webhookd/v3 v3.0.3
@@ -119,7 +119,7 @@ github.com/whosonfirst/go-webhookd/v3/dispatcher
 github.com/whosonfirst/go-webhookd/v3/receiver
 github.com/whosonfirst/go-webhookd/v3/transformation
 github.com/whosonfirst/go-webhookd/v3/webhook
-# github.com/whosonfirst/go-whosonfirst-findingaid v0.0.4
+# github.com/whosonfirst/go-whosonfirst-findingaid v0.0.5
 ## explicit
 github.com/whosonfirst/go-whosonfirst-findingaid
 # github.com/whosonfirst/go-whosonfirst-sources v0.1.0

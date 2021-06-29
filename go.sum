@@ -386,6 +386,8 @@ github.com/whosonfirst/go-webhookd-gocloud v0.0.0-20210624154541-2fc06298c125 h1
 github.com/whosonfirst/go-webhookd-gocloud v0.0.0-20210624154541-2fc06298c125/go.mod h1:WkufZfQ+VcNoV7B1KbGKoRBthTTUdPHjelrnfr4kRb8=
 github.com/whosonfirst/go-webhookd-gocloud v0.0.1 h1:xOoJRH54MaVyxrz8PSETYAApV6669FGdOjC/dr6QsN4=
 github.com/whosonfirst/go-webhookd-gocloud v0.0.1/go.mod h1:WkufZfQ+VcNoV7B1KbGKoRBthTTUdPHjelrnfr4kRb8=
+github.com/whosonfirst/go-webhookd-gocloud v0.0.4 h1:9g8nJEoQVJH6Q35XEiA2Ep/ercVKElelcc5P5vhQBKA=
+github.com/whosonfirst/go-webhookd-gocloud v0.0.4/go.mod h1:WkufZfQ+VcNoV7B1KbGKoRBthTTUdPHjelrnfr4kRb8=
 github.com/whosonfirst/go-webhookd/v3 v3.0.0 h1:wnBKaOU75HAYdS29R8BHpPb/pl24TiX2oFGPts0+kqo=
 github.com/whosonfirst/go-webhookd/v3 v3.0.0/go.mod h1:a4RlfZkEEgs2HZV73IvxdD6huHQ5gWoYeuaX8JRHOAI=
 github.com/whosonfirst/go-webhookd/v3 v3.0.1 h1:k+1PloYWuyPKfTkIr+q8eoMdy2AzuAUV/ec72vCi3ZA=
@@ -395,7 +397,10 @@ github.com/whosonfirst/go-webhookd/v3 v3.0.3/go.mod h1:9tfKp6EPB9HfZDWW/AvKI650/
 github.com/whosonfirst/go-whosonfirst-crawl v0.2.1/go.mod h1:MTD1TCgAkXlAtysPU98ylrz9Y5+ZCfRrsrBnRyiH/t8=
 github.com/whosonfirst/go-whosonfirst-findingaid v0.0.4 h1:e9BSGwm849nl6kyy5jBRAdzDROOftWTmkP0dNuvF5NY=
 github.com/whosonfirst/go-whosonfirst-findingaid v0.0.4/go.mod h1:/jVL5PnEV/NImGZn6MJYKooCQA/ImKAVF7Pq5QhXfdE=
+github.com/whosonfirst/go-whosonfirst-findingaid v0.0.5 h1:RQq8XgTo1WA+Dkbe+g5rPQscQfSrSfazzoFGYdqlHHk=
+github.com/whosonfirst/go-whosonfirst-findingaid v0.0.5/go.mod h1:HP7Nvwa4aiEbwMb8Lvq8oVQlWYfI1QTEC0yB4hL8W6Y=
 github.com/whosonfirst/go-whosonfirst-iterate v1.1.2/go.mod h1:MOA6QCBONVG98p8kA8HaoBEAmv83jW4SNTfNhHpP9+o=
+github.com/whosonfirst/go-whosonfirst-iterate v1.2.0/go.mod h1:MOA6QCBONVG98p8kA8HaoBEAmv83jW4SNTfNhHpP9+o=
 github.com/whosonfirst/go-whosonfirst-sources v0.1.0 h1:JuKLa6KWke22jBfJ1pM9WQHoz1/3pbDv2C+aR+THPPQ=
 github.com/whosonfirst/go-whosonfirst-sources v0.1.0/go.mod h1:EUMHyGzUmqPPxlMmOp+28BFeoBdxxE0HCKRd67lkqGM=
 github.com/whosonfirst/go-whosonfirst-uri v1.0.1 h1:hVEDRuW9WhqvTksDi092OO9UecX7PAMDrD47KPEqAg0=

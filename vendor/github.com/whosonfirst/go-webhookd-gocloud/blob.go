@@ -2,9 +2,12 @@ package gocloud
 
 import (
 	"context"
+	"fmt"
 	"github.com/whosonfirst/go-webhookd/v3"
 	"github.com/whosonfirst/go-webhookd/v3/dispatcher"
 	"gocloud.dev/blob"
+	"net/url"
+	"time"
 )
 
 func init() {
@@ -25,9 +28,27 @@ func init() {
 type BlobDispatcher struct {
 	webhookd.WebhookDispatcher
 	bucket *blob.Bucket
+	prefix string
 }
 
 func NewBlobDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatcher, error) {
+
+	u, err := url.Parse(uri)
+
+	if err != nil {
+		return nil, err
+	}
+
+	q := u.Query()
+	prefix := q.Get("dispatch_prefix")
+
+	// START OF gocloud.dev/blob gets upset with flags it doesn't recognize
+
+	q.Del("dispatch_prefix")
+	u.RawQuery = q.Encode()
+	uri = u.String()
+
+	// END OF gocloud.dev/blob gets upset with flags it doesn't recognize
 
 	bucket, err := blob.OpenBucket(ctx, uri)
 
@@ -37,6 +58,7 @@ func NewBlobDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatc
 
 	d := BlobDispatcher{
 		bucket: bucket,
+		prefix: prefix,
 	}
 
 	return &d, nil
@@ -55,6 +77,23 @@ func (d *BlobDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.We
 
 	if err != nil {
 		return &webhookd.WebhookError{Code: 999, Message: err.Error()}
+	}
+
+	if d.prefix != "" {
+
+		switch d.prefix {
+
+		case "_ts_":
+
+			now := time.Now()
+			ts := now.Unix()
+
+			fname = fmt.Sprintf("%d-%s", ts, fname)
+
+		default:
+			err := fmt.Errorf("Custom prefixes are not immplemented yet")
+			return &webhookd.WebhookError{Code: 999, Message: err.Error()}
+		}
 	}
 
 	wr, err := d.bucket.NewWriter(ctx, fname, nil)
