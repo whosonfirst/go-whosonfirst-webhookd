@@ -15,7 +15,7 @@ import (
 	"github.com/whosonfirst/go-whosonfirst-uri"
 	"gocloud.dev/blob"
 	"io"
-	"log"
+	_ "log"
 	"net/url"
 )
 
@@ -85,8 +85,6 @@ func NewFindingAidRepoDispatcher(ctx context.Context, uri string) (webhookd.Webh
 // package and updates (or creates) a corresponding go-whosonfirst-findingaid record for each row.
 func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.WebhookError {
 
-	log.Println("DISPATCH", d.acl)
-	
 	// START OF S3 permissions stuff
 	// This should really be moved in to a generic method like:
 	// ctx = SetACLContextForS3Blob(ctx, "relevent-key-name", acl)
@@ -138,6 +136,8 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 			return &webhookd.WebhookError{Code: 999, Message: err.Error()}
 		}
 
+		// TBD: Do this concurrently?
+		
 		err = d.dispatchRow(ctx, row)
 
 		if err != nil {
@@ -150,6 +150,10 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 
 func (d *FindingAidRepoDispatcher) dispatchRow(ctx context.Context, row []string) error {
 
+	// This should probably be moved in to a public method in go-whosonfirst-findingaid/repo
+	// so that it can be common code invoked by offline tasks as well as live webhookd
+	// processes
+	
 	select {
 	case <-ctx.Done():
 		return nil
