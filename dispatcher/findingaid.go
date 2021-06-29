@@ -6,14 +6,12 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aaronland/go-cloud-s3blob"
 	cache_blob "github.com/whosonfirst/go-cache-blob"
 	webhookd "github.com/whosonfirst/go-webhookd/v3"
 	webhookd_dispatcher "github.com/whosonfirst/go-webhookd/v3/dispatcher"
 	"github.com/whosonfirst/go-whosonfirst-findingaid"
 	"github.com/whosonfirst/go-whosonfirst-uri"
-	"gocloud.dev/blob"
 	"io"
 	_ "log"
 	"net/url"
@@ -85,34 +83,10 @@ func NewFindingAidRepoDispatcher(ctx context.Context, uri string) (webhookd.Webh
 // package and updates (or creates) a corresponding go-whosonfirst-findingaid record for each row.
 func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.WebhookError {
 
-	// START OF S3 permissions stuff
-	// This should really be moved in to a generic method like:
-	// ctx = SetACLContextForS3Blob(ctx, "relevent-key-name", acl)
-	
 	if d.acl != "" {
-
-		before := func(asFunc func(interface{}) bool) error {
-
-			req := &s3manager.UploadInput{}
-			ok := asFunc(&req)
-
-			if !ok {
-				return fmt.Errorf("invalid s3 type")
-			}
-
-			req.ACL = aws.String(d.acl)
-			return nil
-		}
-
-		wr_opts := &blob.WriterOptions{
-			BeforeWrite: before,
-		}
-
-		// This gets retrieved in whosonfirst/go-cache-blob.Set()
-		ctx = context.WithValue(ctx, cache_blob.BlobCacheOptionsKey("options"), wr_opts)
+		ctx_key := cache_blob.BlobCacheOptionsKey("options")
+		ctx = s3blob.SetACLWriterOptionsWithContext(ctx, ctx_key, d.acl)
 	}
-
-	// END OF S3 permissions stuff
 
 	br := bytes.NewReader(body)
 	csv_r := csv.NewReader(br)

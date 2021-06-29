@@ -103,6 +103,10 @@ github.com/aaronland/go-chicken v0.2.2 h1:0i3A1VMcCaZSuU6AWBxxvqRUAf96kcCW5toBGS
 github.com/aaronland/go-chicken v0.2.2/go.mod h1:ZGet+ivqsO/MvvXvCzrJupJREzNWa4CZgbpjYpMW96E=
 github.com/aaronland/go-cloud-s3blob v0.1.0 h1:4/tXihMCrszVmswvuvKSfHY+VvfWkp9I3eNlDVM47bA=
 github.com/aaronland/go-cloud-s3blob v0.1.0/go.mod h1:WAv8p20qbjrl8TSN4HkL9qy+Agt8ds0aY8OGd/j4OCY=
+github.com/aaronland/go-cloud-s3blob v0.2.0 h1:ChqvFNc5MCiCaX0grDoZqYxhf3/n3sizADaMwZ9VOqo=
+github.com/aaronland/go-cloud-s3blob v0.2.0/go.mod h1:b9v9K7VVS5ISqLqdCNiKijezqGyhadad5klIog1AQXA=
+github.com/aaronland/go-cloud-s3blob v0.2.1 h1:p80oK5UzfIkxG2d4PeI9XuhlJWhG/DeEGDCPOPErnVc=
+github.com/aaronland/go-cloud-s3blob v0.2.1/go.mod h1:b9v9K7VVS5ISqLqdCNiKijezqGyhadad5klIog1AQXA=
 github.com/aaronland/go-http-server v0.0.3 h1:VyiOxUqgJccamLQNOx7p0D3qE9K5RUe3TKe8vy3gZa4=
 github.com/aaronland/go-http-server v0.0.3/go.mod h1:i7CG6Q9iRKZX4qonIYr73GtJpVHV8T31eZ4Ug44zOTU=
 github.com/aaronland/go-http-server v0.0.6 h1:KR6zm17QB+Mal0kpn/7vZHzj18W2O5ytGKIF7D1cN/4=
@@ -141,6 +145,8 @@ github.com/aws/aws-sdk-go v1.34.21/go.mod h1:5zCpMtNQVjRREroY7sYe8lOMRSxkhG6MZve
 github.com/aws/aws-sdk-go v1.38.35/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/aws/aws-sdk-go v1.38.53 h1:Qj5OvKPrDGTiCnWj+kwQXAlBO6OaFBH/WaRzJPZPg3w=
 github.com/aws/aws-sdk-go v1.38.53/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
+github.com/aws/aws-sdk-go v1.38.69 h1:V489lmrdkIQSfF6OAGZZ1Cavcm7eczCm2JcGvX+yHRg=
+github.com/aws/aws-sdk-go v1.38.69/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/census-instrumentation/opencensus-proto v0.2.0/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/census-instrumentation/opencensus-proto v0.3.0/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
