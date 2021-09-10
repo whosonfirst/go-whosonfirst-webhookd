@@ -4,5 +4,5 @@ go 1.16
 
 require (
 	github.com/whosonfirst/go-webhookd/v3 v3.0.3
-	gocloud.dev v0.23.0
+	gocloud.dev v0.24.0
 )
