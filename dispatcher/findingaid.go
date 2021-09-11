@@ -111,7 +111,7 @@ func (d *FindingAidRepoDispatcher) Dispatch(ctx context.Context, body []byte) *w
 		}
 
 		// TBD: Do this concurrently?
-		
+
 		err = d.dispatchRow(ctx, row)
 
 		if err != nil {
@@ -127,7 +127,7 @@ func (d *FindingAidRepoDispatcher) dispatchRow(ctx context.Context, row []string
 	// This should probably be moved in to a public method in go-whosonfirst-findingaid/repo
 	// so that it can be common code invoked by offline tasks as well as live webhookd
 	// processes
-	
+
 	select {
 	case <-ctx.Done():
 		return nil
