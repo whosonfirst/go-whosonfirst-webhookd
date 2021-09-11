@@ -123,6 +123,7 @@ github.com/GoogleCloudPlatform/cloudsql-proxy v1.22.0/go.mod h1:mAm5O/zik2RFmcpi
 github.com/GoogleCloudPlatform/cloudsql-proxy v1.24.0/go.mod h1:3tx938GhY4FC+E1KT/jNjDw7Z5qxAEtIiERJ2sXjnII=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/aaronland/go-aws-ecs v0.0.0-20191223230247-60dc6c496737/go.mod h1:xNpGjun/3UuiwjrkRERo8qsnTVLkGFaSZB8Y/WXZbCw=
+github.com/aaronland/go-aws-ecs v0.0.1 h1:rDf4fanH+ncmqyM68+9Sg6na5qRTGFHOihtH68MSo3U=
 github.com/aaronland/go-aws-ecs v0.0.1/go.mod h1:rtvgohujEKwTC81CNiGSTnIiSataBxwBLRuiGBA6r3M=
 github.com/aaronland/go-aws-session v0.0.4 h1:GddU3E4pXAm3JWVjcdgyYhdGaWSRtiZl6Iwwt7+OLcU=
 github.com/aaronland/go-aws-session v0.0.4/go.mod h1:1OD+6F7D052nJMkz2tLx5FvMVpreAVU0ye9ur5O+nno=

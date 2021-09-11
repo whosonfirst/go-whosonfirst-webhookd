@@ -4,9 +4,8 @@
 // receiver and the https://github.com/whosonfirst/go-webhookd-github#githubrepo transformation
 // and finally written to S3 using the https://github.com/whosonfirst/go-webhookd-gocloud dispatcher.
 // This tool will invoke a Lambda function, which is not necessarily but otherwise assumed to be the one
-// defined in https://github.com/whosonfirst/go-webhookd-aws/tree/main/cmd/webhookd-aws-launch-task
-// which, in turn, will invoke an ECS task. The point being it's just a giant bucket brigade to
-// pass around a repo name in order to prevent invoking a thundering herd of ECS tasks when a repo
+// defined in cmd/launch-ecs-task which, in turn, will invoke an ECS task. The point being it's just a giant
+// bucket brigade to pass around a repo name in order to prevent invoking a thundering herd of ECS tasks when a repo
 // has a lot of small atomic commits (triggering GitHub receiver above).
 package main
 

@@ -3,6 +3,7 @@ module github.com/whosonfirst/go-whosonfirst-webhookd
 go 1.16
 
 require (
+	github.com/aaronland/go-aws-ecs v0.0.1
 	github.com/aaronland/go-aws-session v0.0.6
 	github.com/aaronland/gocloud-blob-s3 v0.1.3
 	github.com/aws/aws-lambda-go v1.24.0

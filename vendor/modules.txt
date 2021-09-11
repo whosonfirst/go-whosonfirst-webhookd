@@ -1,3 +1,6 @@
+# github.com/aaronland/go-aws-ecs v0.0.1
+## explicit
+github.com/aaronland/go-aws-ecs
 # github.com/aaronland/go-aws-session v0.0.6
 ## explicit
 github.com/aaronland/go-aws-session
@@ -73,6 +76,8 @@ github.com/aws/aws-sdk-go/private/protocol/rest
 github.com/aws/aws-sdk-go/private/protocol/restjson
 github.com/aws/aws-sdk-go/private/protocol/restxml
 github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
+github.com/aws/aws-sdk-go/service/cloudwatchlogs
+github.com/aws/aws-sdk-go/service/ecs
 github.com/aws/aws-sdk-go/service/lambda
 github.com/aws/aws-sdk-go/service/s3
 github.com/aws/aws-sdk-go/service/s3/s3iface
