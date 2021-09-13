@@ -23,14 +23,14 @@ func main() {
 
 	fs := flagset.NewFlagSet("webhookd-aws-launch-task")
 
-	var ecs_dsn = fs.String("ecs-dsn", "", "A valid (go-whosonfirst-aws) ECS DSN.")
+	var ecs_dsn = fs.String("ecs-dsn", "", "A valid aaronland/go-aws-ecs DSN string.")
 
 	var ecs_container = fs.String("ecs-container", "", "The name of your AWS ECS container.")
 	var ecs_cluster = fs.String("ecs-cluster", "", "The name of your AWS ECS cluster.")
 	var ecs_task = fs.String("ecs-task", "", "The name of your AWS ECS task (inclusive of its version number),")
 
-	var ecs_launch_type = fs.String("ecs-launch-type", "FARGATE", "...")
-	var ecs_public_ip = fs.String("ecs-public-ip", "ENABLED", "...")
+	var ecs_launch_type = fs.String("ecs-launch-type", "FARGATE", "A valid (AWS) ECS launch type.")
+	var ecs_public_ip = fs.String("ecs-public-ip", "ENABLED", "Whether or not to enable a public IP address for your ECS task.")
 
 	var ecs_subnets multi.MultiString
 	fs.Var(&ecs_subnets, "ecs-subnet", "One or more AWS subnets in which your task will run.")
@@ -38,8 +38,8 @@ func main() {
 	var ecs_security_groups multi.MultiString
 	fs.Var(&ecs_security_groups, "ecs-security-group", "One of more AWS security groups your task will assume.")
 
-	var mode = fs.String("mode", "cli", "...")
-	var command = fs.String("command", "", "...")
+	var mode = fs.String("mode", "cli", "Valid options are: cli, lambda.")
+	var command = fs.String("command", "", "The command to launch your ECS task with.")
 
 	flagset.Parse(fs)
 

@@ -1,3 +1,4 @@
+// webhookd-generate-hook will generate a random string to use as a webhook endpoint.
 package main
 
 import (

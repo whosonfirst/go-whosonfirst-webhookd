@@ -22,17 +22,18 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"github.com/aaronland/go-aws-session"
 	go_lambda "github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/go-flags/multi"
 	"gocloud.dev/blob"
 	"io"
 	"log"
 	"net/url"
+	"strings"
 )
 
 // START OF please merge with aaronland/go-aws-lambda
@@ -124,15 +125,23 @@ func NewDispatcher(ctx context.Context, uri string) (*Dispatcher, error) {
 
 func main() {
 
+	fs := flagset.NewFlagSet("dispatch")
+
 	var lambda_uris multi.MultiString
-	flag.Var(&lambda_uris, "lambda-uri", "...")
+	fs.Var(&lambda_uris, "lambda-uri", "One or more valid aaronland/go-aws-lambda URIs. If run in -mode lambda mulitple values can be specified as a ';' separater list in the `WEBHOOKD_LAMBDA_URIS` environment variable.")
 
-	bucket_uri := flag.String("bucket-uri", "", "...")
+	bucket_uri := fs.String("bucket-uri", "", "A valid gocloud.dev/blob Bucket URI where buffered dispatch messages are stored.")
 
-	mode := flag.String("mode", "cli", "...")
-	dryrun := flag.Bool("dryrun", false, "Go through the motions but don't invoke any tasks")
-	
-	flag.Parse()
+	mode := fs.String("mode", "cli", "Valid options are: cli, lambda.")
+	dryrun := fs.Bool("dryrun", false, "Go through the motions but don't invoke any tasks")
+
+	flagset.Parse(fs)
+
+	err := flagset.SetFlagsFromEnvVarsWithFeedback(fs, "WEBHOOKD", true)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	ctx := context.Background()
 
@@ -143,6 +152,10 @@ func main() {
 	}
 
 	var dispatchers []*Dispatcher
+
+	if *mode == "lambda" {
+		lambda_uris = strings.Split(lambda_uris[0], ";")
+	}
 
 	for _, uri := range lambda_uris {
 
@@ -232,10 +245,10 @@ func process(ctx context.Context, bucket *blob.Bucket, dryrun bool, dispatchers 
 				for _, d := range dispatchers {
 					log.Printf("Dispatch '%s' to %v\n", string(body), d)
 				}
-				
+
 				return nil
 			}
-			
+
 			for _, d := range dispatchers {
 
 				err := d.Dispatch(ctx, body)

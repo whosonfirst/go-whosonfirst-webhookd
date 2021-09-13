@@ -1,3 +1,5 @@
+// webhookd-flatten-config is a tool to "flatten" a valid webhookd config file in to a string that can be copy-pasted
+// in to an (AWS) Lambda environment variable field.
 package main
 
 import (
@@ -14,8 +16,8 @@ import (
 
 func main() {
 
-	config_path := flag.String("config", "", "The path your webhookd config file")
-	constvar := flag.Bool("constvar", false, "...")
+	config_path := flag.String("config", "", "The path your webhookd config file.")
+	constvar := flag.Bool("constvar", false, "Encode the output as a valid gocloud.dev/runtimevar `constvar` string.")
 
 	flag.Parse()
 
