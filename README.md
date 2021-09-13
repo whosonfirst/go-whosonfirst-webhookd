@@ -338,6 +338,14 @@ Usage of ./bin/webhookd-flatten-config:
 
 ![](docs/arch/arch.jpg)
 
+The "view from 50, 000 feet" looks like this:
+
+* Data repositories on GitHub are configured to invoke webhooks when changes are pushed to the `main` branch.
+* Those webhooks point to `cmd/webhookd/main.go`.
+* The body of (GitHub) webhook message is transformed into a) a list of WOF paths that have been updated or b) the name of the repository that was updated.
+* If (a) that list is passed to the `FindingAidRepo` dispatcher described above.
+* If (b) that repo name is used to invoke a Lambda function (which will in turn invoke an ECS task) _or_ it will be written to S3 (or more accurately a `gocloud.dev/blob` storage endpoint) to be processed asynchronously.
+
 ## See also
 
 * https://github.com/whosonfirst/go-webhookd
