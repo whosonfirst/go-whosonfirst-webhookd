@@ -25,6 +25,10 @@ import (
 )
 
 import (
+	_ "gocloud.dev/runtimevar/awsparamstore"
+)
+
+import (
 	"context"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/whosonfirst/go-webhookd/v3/config"
