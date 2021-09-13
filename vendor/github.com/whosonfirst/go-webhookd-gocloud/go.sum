@@ -109,6 +109,7 @@ github.com/GoogleCloudPlatform/cloudsql-proxy v1.24.0/go.mod h1:3tx938GhY4FC+E1K
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/aaronland/go-chicken v0.2.2/go.mod h1:ZGet+ivqsO/MvvXvCzrJupJREzNWa4CZgbpjYpMW96E=
 github.com/aaronland/go-http-server v0.0.6/go.mod h1:6dtsZDrQG0XvUOCL0eaHsUw+7gw3Xa/Nm+XofvkSw2w=
+github.com/aaronland/go-http-server v0.0.7/go.mod h1:6dtsZDrQG0XvUOCL0eaHsUw+7gw3Xa/Nm+XofvkSw2w=
 github.com/aaronland/go-roster v0.0.2 h1:2Fu7v4VQLRLRL/Zgr6R9S5JxsW75Ab/K88QtMVX532s=
 github.com/aaronland/go-roster v0.0.2/go.mod h1:AcovpxlG1XxJxX2Fjqlm63fEIBhCjEIBV4lP87FZDmI=
 github.com/aaronland/go-ucd/v13 v13.0.0/go.mod h1:VhXooaIYT3dVPSHMRLGvmF6CtiV1pdmi0RUEomjoS/s=
@@ -328,6 +329,8 @@ github.com/whosonfirst/algnhsa v0.1.0/go.mod h1:swLBXxaVTv3s6dJLhekdQCuCTshUew+x
 github.com/whosonfirst/go-sanitize v0.1.0/go.mod h1:p/emgbafMM0p5iVAz2XWwecYPl06Tw4Jos9rhTKIrt8=
 github.com/whosonfirst/go-webhookd/v3 v3.0.3 h1:/wjUYxXegs38JiwF57Y936HcrdeSjTQpDNVeu515MGw=
 github.com/whosonfirst/go-webhookd/v3 v3.0.3/go.mod h1:9tfKp6EPB9HfZDWW/AvKI650/8R+7XWKn4uLjHb9yWE=
+github.com/whosonfirst/go-webhookd/v3 v3.0.4 h1:dGpfUC/4HqUzSezguZhhEwvUIZl5XL/DxPxxCiRIy1I=
+github.com/whosonfirst/go-webhookd/v3 v3.0.4/go.mod h1:KBwSnJE/BgpfPKOLjs/OEwLRa8B758MiBxFBModosPM=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
