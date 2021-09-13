@@ -170,7 +170,7 @@ This allows the `dispatch-buffered` Lambda function to read (and delete) files (
                 "s3:PutObjectAcl"
             ],
             "Resource": [
-                "arn:aws:s3:::{BUCKET}/buffered/"
+                "arn:aws:s3:::{BUCKET}/buffered/*"
             ]
         },
         {
