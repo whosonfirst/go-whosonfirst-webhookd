@@ -259,6 +259,7 @@ rm -f main
 Your Lambda functions will need to following environment variables:
 
 | Name | Value | Notes |
+| --- | --- | --- |
 | WEBHOOKD_COMMAND | | The command to invoke your ECS task with |
 | WEBHOOKD_ECS_CLUSTER	| | The name of the ECS cluster for your task |
 | WEBHOOKD_ECS_CONTAINER | | The name of your ECS cluster | 
