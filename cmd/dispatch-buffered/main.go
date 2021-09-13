@@ -7,9 +7,16 @@
 // defined in cmd/launch-ecs-task which, in turn, will invoke an ECS task. The point being it's just a giant
 // bucket brigade to pass around a repo name in order to prevent invoking a thundering herd of ECS tasks when a repo
 // has a lot of small atomic commits (triggering GitHub receiver above).
+//
+// For example:
+// $> ./bin/dispatch-buffered -dryrun \
+//	-bucket-uri 's3blob://sfomuseum-pending/?region=us-west-2&prefix=indexing/&credentials=session' \
+//	-lambda-uri 'lambda://WebhookdIndexingTask?dsn=region=us-west-2 credentials=session'
 package main
 
-import ()
+import (
+	_ "github.com/aaronland/gocloud-blob-s3"
+)
 
 import (
 	"context"
@@ -123,7 +130,8 @@ func main() {
 	bucket_uri := flag.String("bucket-uri", "", "...")
 
 	mode := flag.String("mode", "cli", "...")
-
+	dryrun := flag.Bool("dryrun", false, "Go through the motions but don't invoke any tasks")
+	
 	flag.Parse()
 
 	ctx := context.Background()
@@ -150,7 +158,7 @@ func main() {
 	switch *mode {
 	case "cli":
 
-		err = process(ctx, bucket, dispatchers...)
+		err = process(ctx, bucket, *dryrun, dispatchers...)
 
 		if err != nil {
 			log.Fatalf("Failed to process bucket, %v", err)
@@ -159,7 +167,7 @@ func main() {
 	case "lambda":
 
 		handler := func(ctx context.Context) error {
-			return process(ctx, bucket, dispatchers...)
+			return process(ctx, bucket, *dryrun, dispatchers...)
 		}
 
 		go_lambda.Start(handler)
@@ -170,7 +178,7 @@ func main() {
 	}
 }
 
-func process(ctx context.Context, bucket *blob.Bucket, dispatchers ...*Dispatcher) error {
+func process(ctx context.Context, bucket *blob.Bucket, dryrun bool, dispatchers ...*Dispatcher) error {
 
 	var list func(context.Context, *blob.Bucket, string) error
 
@@ -219,6 +227,15 @@ func process(ctx context.Context, bucket *blob.Bucket, dispatchers ...*Dispatche
 				return fmt.Errorf("Failed to read '%s', %v", path, err)
 			}
 
+			if dryrun {
+
+				for _, d := range dispatchers {
+					log.Printf("Dispatch '%s' to %v\n", string(body), d)
+				}
+				
+				return nil
+			}
+			
 			for _, d := range dispatchers {
 
 				err := d.Dispatch(ctx, body)
