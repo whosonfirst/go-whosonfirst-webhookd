@@ -345,7 +345,7 @@ The "view from 50, 000 feet" looks like this:
 * Those webhooks point to `cmd/webhookd/main.go`.
 * The body of (GitHub) webhook message is transformed into a) a list of WOF paths that have been updated or b) the name of the repository that was updated.
 * If (a) that list is passed to the `FindingAidRepo` dispatcher described above.
-* If (b) that repo name is used to invoke a Lambda function (which will in turn invoke an ECS task) _or_ it will be written to S3 (or more accurately a `gocloud.dev/blob` storage endpoint) to be processed asynchronously.
+* If (b) that repo name is used to invoke a Lambda function (which will in turn invoke an ECS task) _or_ it will be written to S3 (or more accurately a `gocloud.dev/blob` storage endpoint) to be processed asynchronously (using the [dispatch-buffered](https://github.com/whosonfirst/go-whosonfirst-webhookd#dispatch-buffered) tool).
 
 ## See also
 
