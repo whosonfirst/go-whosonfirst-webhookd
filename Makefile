@@ -23,6 +23,7 @@ lambda-config:
 lambda:
 	@make lambda-webhookd
 	@make lambda-task
+	@make lambda-dispatch
 
 lambda-webhookd:
 	if test -f main; then rm -f main; fi
@@ -36,4 +37,11 @@ lambda-task:
 	if test -f launch-ecs-task.zip; then rm -f launch-ecs-task.zip; fi
 	GOOS=linux go build -mod vendor -o main cmd/launch-ecs-task/main.go
 	zip launch-ecs-task.zip main
+	rm -f main
+
+lambda-dispatch:
+	if test -f main; then rm -f main; fi
+	if test -f dispatch-buffered.zip; then rm -f dispatch-buffered.zip; fi
+	GOOS=linux go build -mod vendor -o main cmd/dispatch-buffered/main.go
+	zip dispatch-buffered.zip main
 	rm -f main
