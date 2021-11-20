@@ -10,8 +10,6 @@ github.com/aaronland/go-chicken/emoji
 github.com/aaronland/go-chicken/strings
 # github.com/aaronland/go-http-server v0.0.7
 github.com/aaronland/go-http-server
-# github.com/aaronland/go-json-query v0.1.1
-github.com/aaronland/go-json-query
 # github.com/aaronland/go-roster v0.0.2
 github.com/aaronland/go-roster
 # github.com/aaronland/go-string v0.1.2
@@ -166,22 +164,12 @@ github.com/googleapis/gax-go/v2/apierror
 github.com/googleapis/gax-go/v2/apierror/internal/proto
 # github.com/jmespath/go-jmespath v0.4.0
 github.com/jmespath/go-jmespath
-# github.com/jtacoma/uritemplates v1.0.0
-github.com/jtacoma/uritemplates
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 github.com/patrickmn/go-cache
 # github.com/sfomuseum/go-flags v0.8.2
 ## explicit
 github.com/sfomuseum/go-flags/flagset
 github.com/sfomuseum/go-flags/multi
-# github.com/tidwall/gjson v1.10.2
-github.com/tidwall/gjson
-# github.com/tidwall/match v1.1.1
-github.com/tidwall/match
-# github.com/tidwall/pretty v1.2.0
-github.com/tidwall/pretty
-# github.com/tidwall/sjson v1.2.3
-github.com/tidwall/sjson
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa
 # github.com/whosonfirst/go-cache v0.5.0
@@ -209,24 +197,6 @@ github.com/whosonfirst/go-webhookd/v3/dispatcher
 github.com/whosonfirst/go-webhookd/v3/receiver
 github.com/whosonfirst/go-webhookd/v3/transformation
 github.com/whosonfirst/go-webhookd/v3/webhook
-# github.com/whosonfirst/go-whosonfirst-crawl v0.2.1
-github.com/whosonfirst/go-whosonfirst-crawl
-# github.com/whosonfirst/go-whosonfirst-findingaid v1.0.0
-## explicit
-github.com/whosonfirst/go-whosonfirst-findingaid
-github.com/whosonfirst/go-whosonfirst-findingaid/repo
-# github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.0.1
-github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter
-github.com/whosonfirst/go-whosonfirst-iterate/v2/filters
-github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator
-# github.com/whosonfirst/go-whosonfirst-sources v0.1.0
-github.com/whosonfirst/go-whosonfirst-sources
-github.com/whosonfirst/go-whosonfirst-sources/sources
-# github.com/whosonfirst/go-whosonfirst-uri v1.1.0
-## explicit
-github.com/whosonfirst/go-whosonfirst-uri
-# github.com/whosonfirst/walk v0.0.1
-github.com/whosonfirst/walk
 # go.opencensus.io v0.23.0
 go.opencensus.io
 go.opencensus.io/internal

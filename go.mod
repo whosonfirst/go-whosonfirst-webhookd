@@ -14,7 +14,5 @@ require (
 	github.com/whosonfirst/go-webhookd-github v1.0.2
 	github.com/whosonfirst/go-webhookd-gocloud v0.0.7
 	github.com/whosonfirst/go-webhookd/v3 v3.0.4
-	github.com/whosonfirst/go-whosonfirst-findingaid v1.0.0
-	github.com/whosonfirst/go-whosonfirst-uri v1.1.0
 	gocloud.dev v0.24.0
 )
