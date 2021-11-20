@@ -10,7 +10,7 @@ github.com/aaronland/go-chicken/emoji
 github.com/aaronland/go-chicken/strings
 # github.com/aaronland/go-http-server v0.0.7
 github.com/aaronland/go-http-server
-# github.com/aaronland/go-json-query v0.1.0
+# github.com/aaronland/go-json-query v0.1.1
 github.com/aaronland/go-json-query
 # github.com/aaronland/go-roster v0.0.2
 github.com/aaronland/go-roster
@@ -23,14 +23,14 @@ github.com/aaronland/go-ucd/v13/unihan
 # github.com/aaronland/gocloud-blob-s3 v0.1.3
 ## explicit
 github.com/aaronland/gocloud-blob-s3
-# github.com/aws/aws-lambda-go v1.26.0
+# github.com/aws/aws-lambda-go v1.27.0
 ## explicit
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
 github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
-# github.com/aws/aws-sdk-go v1.40.42
+# github.com/aws/aws-sdk-go v1.42.9
 ## explicit
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
@@ -174,13 +174,13 @@ github.com/patrickmn/go-cache
 ## explicit
 github.com/sfomuseum/go-flags/flagset
 github.com/sfomuseum/go-flags/multi
-# github.com/tidwall/gjson v1.8.1
+# github.com/tidwall/gjson v1.10.2
 github.com/tidwall/gjson
-# github.com/tidwall/match v1.0.3
+# github.com/tidwall/match v1.1.1
 github.com/tidwall/match
 # github.com/tidwall/pretty v1.2.0
 github.com/tidwall/pretty
-# github.com/tidwall/sjson v1.1.7
+# github.com/tidwall/sjson v1.2.3
 github.com/tidwall/sjson
 # github.com/whosonfirst/algnhsa v0.1.0
 github.com/whosonfirst/algnhsa
@@ -211,14 +211,14 @@ github.com/whosonfirst/go-webhookd/v3/transformation
 github.com/whosonfirst/go-webhookd/v3/webhook
 # github.com/whosonfirst/go-whosonfirst-crawl v0.2.1
 github.com/whosonfirst/go-whosonfirst-crawl
-# github.com/whosonfirst/go-whosonfirst-findingaid v0.0.8
+# github.com/whosonfirst/go-whosonfirst-findingaid v1.0.0
 ## explicit
 github.com/whosonfirst/go-whosonfirst-findingaid
 github.com/whosonfirst/go-whosonfirst-findingaid/repo
-# github.com/whosonfirst/go-whosonfirst-iterate v1.2.0
-github.com/whosonfirst/go-whosonfirst-iterate/emitter
-github.com/whosonfirst/go-whosonfirst-iterate/filters
-github.com/whosonfirst/go-whosonfirst-iterate/iterator
+# github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.0.1
+github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter
+github.com/whosonfirst/go-whosonfirst-iterate/v2/filters
+github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator
 # github.com/whosonfirst/go-whosonfirst-sources v0.1.0
 github.com/whosonfirst/go-whosonfirst-sources
 github.com/whosonfirst/go-whosonfirst-sources/sources
