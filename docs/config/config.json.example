@@ -1,20 +1,21 @@
 {
-    "daemon": "http://localhost:8080?allow_debug=1",
+    "daemon": "lambda://",
     "receivers": {
-	"insecure": "insecure://"
+	"insecure": "insecure://",
+	"github_index" : "github://?secret={SECRET}&ref=refs/heads/master"		
     },	
     "transformations": {
 	"null": "null://",
 	"chicken": "chicken://zxx",
 	"clucking": "chicken://eng?clucking=true",
-	"commits": "githubcommits://"
+	"commits": "githubcommits://",
+	"repo" : "githubrepo://"	
     },
     "dispatchers": {
 	"null": "null://",
 	"log": "log://",
 	"blob": "file:///tmp/webhookd/?metadata=skip",
-	"repo-local": "findingaid-repo://?cache=file:///tmp/findingaid/",
-	"repo-s3": "findingaid-repo://?cache=s3blob%3A%2F%2Fsfomuseum-data%3Fregion%3Dus-west-2%26prefix%3Dfindingaid-debug%2F%26credentials%3Dsession&acl=public-read"	
+	"indexing" : "lambda://{FUNCTION}?dsn=credentials={CREDENTIALS}%20region={REGION}"	
     },
     "webhooks": [
 	{
@@ -24,10 +25,10 @@
 	    "dispatchers": [ "log", "blob" ]
 	},
 	{
-	    "endpoint": "/findingaid-test",
-	    "receiver": "insecure",
-	    "transformations": [ "commits" ],
-	    "dispatchers": [ "repo-s3" ]
+	    "endpoint": "/indexing-test/{SECRET}",
+	    "receiver": "github_index",
+	    "transformations": [ "repo" ],
+	    "dispatchers": [ "indexing" ]
 	}		
     ]
 }
