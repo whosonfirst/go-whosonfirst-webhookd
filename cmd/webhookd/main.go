@@ -3,7 +3,7 @@
 package main
 
 import (
-	// necessary for blob dispatcher and the findingaid-repo dispatcher (by way of the go-whosonfirst-findingaid cache)
+	// necessary for blob dispatcher
 	_ "github.com/aaronland/gocloud-blob-s3"
 	// necessary for findingaid-repo dispatcher
 	_ "github.com/whosonfirst/go-cache-blob"
@@ -22,15 +22,19 @@ import (
 
 import (
 	_ "gocloud.dev/runtimevar/awsparamstore"
+	_ "gocloud.dev/runtimevar/constantvar"
+	_ "gocloud.dev/runtimevar/filevar"
 )
 
 import (
 	"context"
 	"github.com/sfomuseum/go-flags/flagset"
+	"github.com/sfomuseum/runtimevar"
 	"github.com/whosonfirst/go-webhookd/v3/config"
 	"github.com/whosonfirst/go-webhookd/v3/daemon"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -49,10 +53,18 @@ func main() {
 
 	ctx := context.Background()
 
-	cfg, err := config.NewConfigFromURI(ctx, *config_uri)
+	str_cfg, err := runtimevar.StringVar(ctx, *config_uri)
 
 	if err != nil {
-		log.Fatalf("Failed to load config %s, %v", *config_uri, err)
+		log.Fatalf("Failed to open runtimevar, %v", err)
+	}
+
+	cfg_r := strings.NewReader(str_cfg)
+
+	cfg, err := config.NewConfigFromReader(ctx, cfg_r)
+
+	if err != nil {
+		log.Fatalf("Failed to load config from reader, %v", err)
 	}
 
 	wh_daemon, err := daemon.NewWebhookDaemonFromConfig(ctx, cfg)

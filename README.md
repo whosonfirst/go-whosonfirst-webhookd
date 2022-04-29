@@ -18,6 +18,23 @@ import (
 
 Please consult the [go-webhook configuration documentation](https://github.com/whosonfirst/go-webhookd#config-files) as well as the [example config file](docs/config/config.json.example).
 
+## Dispatchers
+
+### FindingAidRepo
+
+The `FindingAidRepoDispatcher` dispatcher implements the `webhookd.WebHookDispatcher` interface and takes as input a []byte containing CSV-encoded rows produced by the `go-webhookd-github.GitHubCommitsTransformation` package and creates a corresponding `go-whosonfirst-findingaid/repo.FindingAidResponse` record for each row. It is defined as a URI string in the form of:
+
+```
+findingaid-repo://?cache=s3blob%3A%2F%2F{BUCKET}%3Fregion%3D{REGION}%26prefix%3D{PREFIX}%2F%26credentials%3Diam:&acl=public-read"
+```
+
+#### Properties
+
+| Name | Value | Description | Required |
+| --- | --- | --- | --- |
+| cache | string | A valid [whosonfirst/go-cache](https://github.com/whosonfirst/go-cache) URI string. | yes |
+
+
 ## Tools
 
 ### webhookd

@@ -9,6 +9,7 @@ require (
 	github.com/aws/aws-lambda-go v1.31.0
 	github.com/aws/aws-sdk-go v1.44.3
 	github.com/sfomuseum/go-flags v0.8.2
+	github.com/sfomuseum/runtimevar v0.0.8
 	github.com/whosonfirst/go-cache-blob v0.2.0
 	github.com/whosonfirst/go-webhookd-aws/v2 v2.2.0
 	github.com/whosonfirst/go-webhookd-github v1.0.2
