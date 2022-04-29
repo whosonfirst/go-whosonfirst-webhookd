@@ -16,7 +16,7 @@ go build -mod vendor -o bin/ecs-launch-task cmd/ecs-launch-task/main.go
 Launch an ECS task from the command line.
 
 ```
-> ./bin/ecs-launch-task -h
+$> ./bin/ecs-launch-task -h
 Usage of ./bin/ecs-launch-task:
   -cluster string
     	The name of your ECS cluster.
@@ -26,6 +26,8 @@ Usage of ./bin/ecs-launch-task:
     	A valid aaronland/go-aws-session DSN string.
   -launch-type string
     	A valid ECS launch type.
+  -platform-version string
+    	A valid ECS platform version.
   -public-ip string
     	A valid ECS public IP string.
   -security-group value

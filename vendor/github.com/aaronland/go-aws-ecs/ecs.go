@@ -16,13 +16,14 @@ type TaskResponse struct {
 }
 
 type TaskOptions struct {
-	Task           string
-	Container      string
-	Cluster        string
-	LaunchType     string
-	PublicIP       string
-	Subnets        []string
-	SecurityGroups []string
+	Task            string
+	Container       string
+	Cluster         string
+	LaunchType      string
+	PlatformVersion string
+	PublicIP        string
+	Subnets         []string
+	SecurityGroups  []string
 }
 
 type MonitorTaskResultSet map[string]*MonitorTaskResult
@@ -60,6 +61,7 @@ func LaunchTaskWithSession(sess *aws_session.Session, task_opts *TaskOptions, cm
 	task := aws.String(task_opts.Task)
 
 	launch_type := aws.String(task_opts.LaunchType)
+	platform_version := aws.String(task_opts.PlatformVersion)
 	public_ip := aws.String(task_opts.PublicIP)
 
 	subnets := make([]*string, len(task_opts.Subnets))
@@ -102,6 +104,7 @@ func LaunchTaskWithSession(sess *aws_session.Session, task_opts *TaskOptions, cm
 		Cluster:              cluster,
 		TaskDefinition:       task,
 		LaunchType:           launch_type,
+		PlatformVersion:      platform_version,
 		NetworkConfiguration: network,
 		Overrides:            overrides,
 	}

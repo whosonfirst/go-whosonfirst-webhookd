@@ -164,20 +164,21 @@ func (c *Lambda) AddPermissionRequest(input *AddPermissionInput) (req *request.R
 
 // AddPermission API operation for AWS Lambda.
 //
-// Grants an Amazon Web Services service or another account permission to use
-// a function. You can apply the policy at the function level, or specify a
-// qualifier to restrict access to a single version or alias. If you use a qualifier,
-// the invoker must use the full Amazon Resource Name (ARN) of that version
-// or alias to invoke the function. Note: Lambda does not support adding policies
-// to version $LATEST.
+// Grants an Amazon Web Services service, account, or organization permission
+// to use a function. You can apply the policy at the function level, or specify
+// a qualifier to restrict access to a single version or alias. If you use a
+// qualifier, the invoker must use the full Amazon Resource Name (ARN) of that
+// version or alias to invoke the function. Note: Lambda does not support adding
+// policies to version $LATEST.
 //
 // To grant permission to another account, specify the account ID as the Principal.
-// For Amazon Web Services services, the principal is a domain-style identifier
-// defined by the service, like s3.amazonaws.com or sns.amazonaws.com. For Amazon
-// Web Services services, you can also specify the ARN of the associated resource
-// as the SourceArn. If you grant permission to a service principal without
-// specifying the source, other accounts could potentially configure resources
-// in their account to invoke your Lambda function.
+// To grant permission to an organization defined in Organizations, specify
+// the organization ID as the PrincipalOrgID. For Amazon Web Services services,
+// the principal is a domain-style identifier defined by the service, like s3.amazonaws.com
+// or sns.amazonaws.com. For Amazon Web Services services, you can also specify
+// the ARN of the associated resource as the SourceArn. If you grant permission
+// to a service principal without specifying the source, other accounts could
+// potentially configure resources in their account to invoke your Lambda function.
 //
 // This action adds a statement to a resource-based permissions policy for the
 // function. For more information about function policies, see Lambda Function
@@ -764,6 +765,10 @@ func (c *Lambda) CreateFunctionUrlConfigRequest(input *CreateFunctionUrlConfigIn
 }
 
 // CreateFunctionUrlConfig API operation for AWS Lambda.
+//
+// Creates a Lambda function URL with the specified configuration parameters.
+// A function URL is a dedicated HTTP(S) endpoint that you can use to invoke
+// your function.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1510,6 +1515,9 @@ func (c *Lambda) DeleteFunctionUrlConfigRequest(input *DeleteFunctionUrlConfigIn
 }
 
 // DeleteFunctionUrlConfig API operation for AWS Lambda.
+//
+// Deletes a Lambda function URL. When you delete a function URL, you can't
+// recover it. Creating a new function URL results in a different URL address.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2570,6 +2578,8 @@ func (c *Lambda) GetFunctionUrlConfigRequest(input *GetFunctionUrlConfigInput) (
 }
 
 // GetFunctionUrlConfig API operation for AWS Lambda.
+//
+// Returns details about a Lambda function URL.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -4002,6 +4012,8 @@ func (c *Lambda) ListFunctionUrlConfigsRequest(input *ListFunctionUrlConfigsInpu
 }
 
 // ListFunctionUrlConfigs API operation for AWS Lambda.
+//
+// Returns a list of Lambda function URLs for the specified function.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -6430,6 +6442,18 @@ func (c *Lambda) UpdateFunctionCodeRequest(input *UpdateFunctionCodeInput) (req 
 // the code package must be signed by a trusted publisher. For more information,
 // see Configuring code signing (https://docs.aws.amazon.com/lambda/latest/dg/configuration-trustedcode.html).
 //
+// If the function's package type is Image, you must specify the code package
+// in ImageUri as the URI of a container image (https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html)
+// in the Amazon ECR registry.
+//
+// If the function's package type is Zip, you must specify the deployment package
+// as a .zip file archive (https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html#gettingstarted-package-zip).
+// Enter the Amazon S3 bucket and key of the code .zip file location. You can
+// also provide the function code inline using the ZipFile field.
+//
+// The code in the deployment package must be compatible with the target instruction
+// set architecture of the function (x86-64 or arm64).
+//
 // The function's code is locked when you publish a version. You can't modify
 // the code of a published version, only the unpublished version.
 //
@@ -6762,6 +6786,8 @@ func (c *Lambda) UpdateFunctionUrlConfigRequest(input *UpdateFunctionUrlConfigIn
 }
 
 // UpdateFunctionUrlConfig API operation for AWS Lambda.
+//
+// Updates the configuration for a Lambda function URL.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -7124,12 +7150,22 @@ type AddPermissionInput struct {
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	FunctionUrlAuthType *string `type:"string" enum:"FunctionUrlAuthType"`
+
 	// The Amazon Web Services service or account that invokes the function. If
 	// you specify a service, use SourceArn or SourceAccount to limit who can invoke
 	// the function through that service.
 	//
 	// Principal is a required field
 	Principal *string `type:"string" required:"true"`
+
+	// The identifier for your organization in Organizations. Use this to grant
+	// permissions to all the Amazon Web Services accounts under this organization.
+	PrincipalOrgID *string `min:"12" type:"string"`
 
 	// Specify a version or alias to add permissions to a published version of the
 	// function.
@@ -7193,6 +7229,9 @@ func (s *AddPermissionInput) Validate() error {
 	if s.Principal == nil {
 		invalidParams.Add(request.NewErrParamRequired("Principal"))
 	}
+	if s.PrincipalOrgID != nil && len(*s.PrincipalOrgID) < 12 {
+		invalidParams.Add(request.NewErrParamMinLen("PrincipalOrgID", 12))
+	}
 	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
 	}
@@ -7227,9 +7266,21 @@ func (s *AddPermissionInput) SetFunctionName(v string) *AddPermissionInput {
 	return s
 }
 
+// SetFunctionUrlAuthType sets the FunctionUrlAuthType field's value.
+func (s *AddPermissionInput) SetFunctionUrlAuthType(v string) *AddPermissionInput {
+	s.FunctionUrlAuthType = &v
+	return s
+}
+
 // SetPrincipal sets the Principal field's value.
 func (s *AddPermissionInput) SetPrincipal(v string) *AddPermissionInput {
 	s.Principal = &v
+	return s
+}
+
+// SetPrincipalOrgID sets the PrincipalOrgID field's value.
+func (s *AddPermissionInput) SetPrincipalOrgID(v string) *AddPermissionInput {
+	s.PrincipalOrgID = &v
 	return s
 }
 
@@ -7784,19 +7835,40 @@ func (s *CodeVerificationFailedException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+// settings for your Lambda function URL. Use CORS to grant access to your function
+// URL from any origin. You can also use CORS to control access for specific
+// HTTP headers and methods in requests to your function URL.
 type Cors struct {
 	_ struct{} `type:"structure"`
 
+	// Whether to allow cookies or other credentials in requests to your function
+	// URL. The default is false.
 	AllowCredentials *bool `type:"boolean"`
 
+	// The HTTP headers that origins can include in requests to your function URL.
+	// For example: Date, Keep-Alive, X-Custom-Header.
 	AllowHeaders []*string `type:"list"`
 
+	// The HTTP methods that are allowed when calling your function URL. For example:
+	// GET, POST, DELETE, or the wildcard character (*).
 	AllowMethods []*string `type:"list"`
 
+	// The origins that can access your function URL. You can list any number of
+	// specific origins, separated by a comma. For example: https://www.example.com,
+	// http://localhost:60905.
+	//
+	// Alternatively, you can grant access to all origins using the wildcard character
+	// (*).
 	AllowOrigins []*string `type:"list"`
 
+	// The HTTP headers in your function response that you want to expose to origins
+	// that call your function URL. For example: Date, Keep-Alive, X-Custom-Header.
 	ExposeHeaders []*string `type:"list"`
 
+	// The maximum amount of time, in seconds, that web browsers can cache results
+	// of a preflight request. By default, this is set to 0, which means that the
+	// browser doesn't cache results.
 	MaxAge *int64 `type:"integer"`
 }
 
@@ -8088,6 +8160,8 @@ type CreateEventSourceMappingInput struct {
 	//    * Amazon Managed Streaming for Apache Kafka - Default 100. Max 10,000.
 	//
 	//    * Self-Managed Apache Kafka - Default 100. Max 10,000.
+	//
+	//    * Amazon MQ (ActiveMQ and RabbitMQ) - Default 100. Max 10,000.
 	BatchSize *int64 `min:"1" type:"integer"`
 
 	// (Streams only) If the function returns an error, split the batch in two and
@@ -8115,6 +8189,11 @@ type CreateEventSourceMappingInput struct {
 	//    * Amazon Managed Streaming for Apache Kafka - The ARN of the cluster.
 	EventSourceArn *string `type:"string"`
 
+	// (Streams and Amazon SQS) An object that defines the filter criteria that
+	// determine whether Lambda should process an event. For more information, see
+	// Lambda event filtering (https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html).
+	FilterCriteria *FilterCriteria `type:"structure"`
+
 	// The name of the Lambda function.
 	//
 	// Name formats
@@ -8133,9 +8212,9 @@ type CreateEventSourceMappingInput struct {
 	// FunctionName is a required field
 	FunctionName *string `min:"1" type:"string" required:"true"`
 
-	// (Streams only) A list of current response type enums applied to the event
-	// source mapping.
-	FunctionResponseTypes []*string `type:"list"`
+	// (Streams and Amazon SQS) A list of current response type enums applied to
+	// the event source mapping.
+	FunctionResponseTypes []*string `type:"list" enum:"FunctionResponseType"`
 
 	// (Streams and Amazon SQS standard queues) The maximum amount of time, in seconds,
 	// that Lambda spends gathering records before invoking the function.
@@ -8281,6 +8360,12 @@ func (s *CreateEventSourceMappingInput) SetEventSourceArn(v string) *CreateEvent
 	return s
 }
 
+// SetFilterCriteria sets the FilterCriteria field's value.
+func (s *CreateEventSourceMappingInput) SetFilterCriteria(v *FilterCriteria) *CreateEventSourceMappingInput {
+	s.FilterCriteria = v
+	return s
+}
+
 // SetFunctionName sets the FunctionName field's value.
 func (s *CreateEventSourceMappingInput) SetFunctionName(v string) *CreateEventSourceMappingInput {
 	s.FunctionName = &v
@@ -8363,8 +8448,9 @@ type CreateFunctionInput struct {
 	_ struct{} `type:"structure"`
 
 	// The instruction set architecture that the function supports. Enter a string
-	// array with one of the valid values. The default value is x86_64.
-	Architectures []*string `min:"1" type:"list"`
+	// array with one of the valid values (arm64 or x86_64). The default value is
+	// x86_64.
+	Architectures []*string `min:"1" type:"list" enum:"Architecture"`
 
 	// The code for the function.
 	//
@@ -8387,6 +8473,10 @@ type CreateFunctionInput struct {
 	// Environment variables that are accessible from function code during execution.
 	Environment *Environment `type:"structure"`
 
+	// The size of the function’s /tmp directory in MB. The default value is 512,
+	// but can be any whole number between 512 and 10240 MB.
+	EphemeralStorage *EphemeralStorage `type:"structure"`
+
 	// Connection settings for an Amazon EFS file system.
 	FileSystemConfigs []*FileSystemConfig `type:"list"`
 
@@ -8407,9 +8497,10 @@ type CreateFunctionInput struct {
 	FunctionName *string `min:"1" type:"string" required:"true"`
 
 	// The name of the method within your code that Lambda calls to execute your
-	// function. The format includes the file name. It can also include namespaces
-	// and other qualifiers, depending on the runtime. For more information, see
-	// Programming Model (https://docs.aws.amazon.com/lambda/latest/dg/programming-model-v2.html).
+	// function. Handler is required if the deployment package is a .zip file archive.
+	// The format includes the file name. It can also include namespaces and other
+	// qualifiers, depending on the runtime. For more information, see Programming
+	// Model (https://docs.aws.amazon.com/lambda/latest/dg/programming-model-v2.html).
 	Handler *string `type:"string"`
 
 	// Container image configuration values (https://docs.aws.amazon.com/lambda/latest/dg/configuration-images.html#configuration-images-settings)
@@ -8444,6 +8535,7 @@ type CreateFunctionInput struct {
 	Role *string `type:"string" required:"true"`
 
 	// The identifier of the function's runtime (https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html).
+	// Runtime is required if the deployment package is a .zip file archive.
 	Runtime *string `type:"string" enum:"Runtime"`
 
 	// A list of tags (https://docs.aws.amazon.com/lambda/latest/dg/tagging.html)
@@ -8513,6 +8605,11 @@ func (s *CreateFunctionInput) Validate() error {
 			invalidParams.AddNested("Code", err.(request.ErrInvalidParams))
 		}
 	}
+	if s.EphemeralStorage != nil {
+		if err := s.EphemeralStorage.Validate(); err != nil {
+			invalidParams.AddNested("EphemeralStorage", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.FileSystemConfigs != nil {
 		for i, v := range s.FileSystemConfigs {
 			if v == nil {
@@ -8563,6 +8660,12 @@ func (s *CreateFunctionInput) SetDescription(v string) *CreateFunctionInput {
 // SetEnvironment sets the Environment field's value.
 func (s *CreateFunctionInput) SetEnvironment(v *Environment) *CreateFunctionInput {
 	s.Environment = v
+	return s
+}
+
+// SetEphemeralStorage sets the EphemeralStorage field's value.
+func (s *CreateFunctionInput) SetEphemeralStorage(v *EphemeralStorage) *CreateFunctionInput {
+	s.EphemeralStorage = v
 	return s
 }
 
@@ -8659,14 +8762,35 @@ func (s *CreateFunctionInput) SetVpcConfig(v *VpcConfig) *CreateFunctionInput {
 type CreateFunctionUrlConfigInput struct {
 	_ struct{} `type:"structure"`
 
-	// AuthorizationType is a required field
-	AuthorizationType *string `type:"string" required:"true" enum:"AuthorizationType"`
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	//
+	// AuthType is a required field
+	AuthType *string `type:"string" required:"true" enum:"FunctionUrlAuthType"`
 
+	// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+	// settings for your function URL.
 	Cors *Cors `type:"structure"`
 
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name - my-function.
+	//
+	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN - 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// The alias name.
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
@@ -8691,8 +8815,8 @@ func (s CreateFunctionUrlConfigInput) GoString() string {
 // Validate inspects the fields of the type to determine if they are valid.
 func (s *CreateFunctionUrlConfigInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "CreateFunctionUrlConfigInput"}
-	if s.AuthorizationType == nil {
-		invalidParams.Add(request.NewErrParamRequired("AuthorizationType"))
+	if s.AuthType == nil {
+		invalidParams.Add(request.NewErrParamRequired("AuthType"))
 	}
 	if s.FunctionName == nil {
 		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
@@ -8710,9 +8834,9 @@ func (s *CreateFunctionUrlConfigInput) Validate() error {
 	return nil
 }
 
-// SetAuthorizationType sets the AuthorizationType field's value.
-func (s *CreateFunctionUrlConfigInput) SetAuthorizationType(v string) *CreateFunctionUrlConfigInput {
-	s.AuthorizationType = &v
+// SetAuthType sets the AuthType field's value.
+func (s *CreateFunctionUrlConfigInput) SetAuthType(v string) *CreateFunctionUrlConfigInput {
+	s.AuthType = &v
 	return s
 }
 
@@ -8737,17 +8861,31 @@ func (s *CreateFunctionUrlConfigInput) SetQualifier(v string) *CreateFunctionUrl
 type CreateFunctionUrlConfigOutput struct {
 	_ struct{} `type:"structure"`
 
-	// AuthorizationType is a required field
-	AuthorizationType *string `type:"string" required:"true" enum:"AuthorizationType"`
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	//
+	// AuthType is a required field
+	AuthType *string `type:"string" required:"true" enum:"FunctionUrlAuthType"`
 
+	// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+	// settings for your function URL.
 	Cors *Cors `type:"structure"`
 
+	// When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime)
+	// (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// CreationTime is a required field
 	CreationTime *string `type:"string" required:"true"`
 
+	// The Amazon Resource Name (ARN) of your function.
+	//
 	// FunctionArn is a required field
 	FunctionArn *string `type:"string" required:"true"`
 
+	// The HTTP URL endpoint for your function.
+	//
 	// FunctionUrl is a required field
 	FunctionUrl *string `min:"40" type:"string" required:"true"`
 }
@@ -8770,9 +8908,9 @@ func (s CreateFunctionUrlConfigOutput) GoString() string {
 	return s.String()
 }
 
-// SetAuthorizationType sets the AuthorizationType field's value.
-func (s *CreateFunctionUrlConfigOutput) SetAuthorizationType(v string) *CreateFunctionUrlConfigOutput {
-	s.AuthorizationType = &v
+// SetAuthType sets the AuthType field's value.
+func (s *CreateFunctionUrlConfigOutput) SetAuthType(v string) *CreateFunctionUrlConfigOutput {
+	s.AuthType = &v
 	return s
 }
 
@@ -9410,9 +9548,23 @@ func (s DeleteFunctionOutput) GoString() string {
 type DeleteFunctionUrlConfigInput struct {
 	_ struct{} `type:"structure" nopayload:"true"`
 
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name - my-function.
+	//
+	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN - 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// The alias name.
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
@@ -10381,6 +10533,57 @@ func (s *EnvironmentResponse) SetVariables(v map[string]*string) *EnvironmentRes
 	return s
 }
 
+// The size of the function’s /tmp directory in MB. The default value is 512,
+// but can be any whole number between 512 and 10240 MB.
+type EphemeralStorage struct {
+	_ struct{} `type:"structure"`
+
+	// The size of the function’s /tmp directory.
+	//
+	// Size is a required field
+	Size *int64 `min:"512" type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EphemeralStorage) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EphemeralStorage) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EphemeralStorage) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EphemeralStorage"}
+	if s.Size == nil {
+		invalidParams.Add(request.NewErrParamRequired("Size"))
+	}
+	if s.Size != nil && *s.Size < 512 {
+		invalidParams.Add(request.NewErrParamMinValue("Size", 512))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetSize sets the Size field's value.
+func (s *EphemeralStorage) SetSize(v int64) *EphemeralStorage {
+	s.Size = &v
+	return s
+}
+
 // A mapping between an Amazon Web Services resource and a Lambda function.
 // For details, see CreateEventSourceMapping.
 type EventSourceMappingConfiguration struct {
@@ -10409,12 +10612,17 @@ type EventSourceMappingConfiguration struct {
 	// The Amazon Resource Name (ARN) of the event source.
 	EventSourceArn *string `type:"string"`
 
+	// (Streams and Amazon SQS) An object that defines the filter criteria that
+	// determine whether Lambda should process an event. For more information, see
+	// Lambda event filtering (https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html).
+	FilterCriteria *FilterCriteria `type:"structure"`
+
 	// The ARN of the Lambda function.
 	FunctionArn *string `type:"string"`
 
 	// (Streams only) A list of current response type enums applied to the event
 	// source mapping.
-	FunctionResponseTypes []*string `type:"list"`
+	FunctionResponseTypes []*string `type:"list" enum:"FunctionResponseType"`
 
 	// The date that the event source mapping was last updated or that its state
 	// changed.
@@ -10523,6 +10731,12 @@ func (s *EventSourceMappingConfiguration) SetDestinationConfig(v *DestinationCon
 // SetEventSourceArn sets the EventSourceArn field's value.
 func (s *EventSourceMappingConfiguration) SetEventSourceArn(v string) *EventSourceMappingConfiguration {
 	s.EventSourceArn = &v
+	return s
+}
+
+// SetFilterCriteria sets the FilterCriteria field's value.
+func (s *EventSourceMappingConfiguration) SetFilterCriteria(v *FilterCriteria) *EventSourceMappingConfiguration {
+	s.FilterCriteria = v
 	return s
 }
 
@@ -10697,6 +10911,72 @@ func (s *FileSystemConfig) SetLocalMountPath(v string) *FileSystemConfig {
 	return s
 }
 
+// A structure within a FilterCriteria object that defines an event filtering
+// pattern.
+type Filter struct {
+	_ struct{} `type:"structure"`
+
+	// A filter pattern. For more information on the syntax of a filter pattern,
+	// see Filter rule syntax (https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html#filtering-syntax).
+	Pattern *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Filter) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Filter) GoString() string {
+	return s.String()
+}
+
+// SetPattern sets the Pattern field's value.
+func (s *Filter) SetPattern(v string) *Filter {
+	s.Pattern = &v
+	return s
+}
+
+// An object that contains the filters for an event source.
+type FilterCriteria struct {
+	_ struct{} `type:"structure"`
+
+	// A list of filters.
+	Filters []*Filter `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FilterCriteria) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FilterCriteria) GoString() string {
+	return s.String()
+}
+
+// SetFilters sets the Filters field's value.
+func (s *FilterCriteria) SetFilters(v []*Filter) *FilterCriteria {
+	s.Filters = v
+	return s
+}
+
 // The code for the Lambda function. You can specify either an object in Amazon
 // S3, upload a .zip file archive deployment package directly, or specify the
 // URI of a container image.
@@ -10861,7 +11141,7 @@ type FunctionConfiguration struct {
 	// The instruction set architecture that the function supports. Architecture
 	// is a string array with one of the valid values. The default architecture
 	// value is x86_64.
-	Architectures []*string `min:"1" type:"list"`
+	Architectures []*string `min:"1" type:"list" enum:"Architecture"`
 
 	// The SHA256 hash of the function's deployment package.
 	CodeSha256 *string `type:"string"`
@@ -10877,6 +11157,10 @@ type FunctionConfiguration struct {
 
 	// The function's environment variables (https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html).
 	Environment *EnvironmentResponse `type:"structure"`
+
+	// The size of the function’s /tmp directory in MB. The default value is 512,
+	// but can be any whole number between 512 and 10240 MB.
+	EphemeralStorage *EphemeralStorage `type:"structure"`
 
 	// Connection settings for an Amazon EFS file system (https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html).
 	FileSystemConfigs []*FileSystemConfig `type:"list"`
@@ -11015,6 +11299,12 @@ func (s *FunctionConfiguration) SetDescription(v string) *FunctionConfiguration 
 // SetEnvironment sets the Environment field's value.
 func (s *FunctionConfiguration) SetEnvironment(v *EnvironmentResponse) *FunctionConfiguration {
 	s.Environment = v
+	return s
+}
+
+// SetEphemeralStorage sets the EphemeralStorage field's value.
+func (s *FunctionConfiguration) SetEphemeralStorage(v *EphemeralStorage) *FunctionConfiguration {
+	s.EphemeralStorage = v
 	return s
 }
 
@@ -11251,23 +11541,41 @@ func (s *FunctionEventInvokeConfig) SetMaximumRetryAttempts(v int64) *FunctionEv
 	return s
 }
 
+// Details about a Lambda function URL.
 type FunctionUrlConfig struct {
 	_ struct{} `type:"structure"`
 
-	// AuthorizationType is a required field
-	AuthorizationType *string `type:"string" required:"true" enum:"AuthorizationType"`
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	//
+	// AuthType is a required field
+	AuthType *string `type:"string" required:"true" enum:"FunctionUrlAuthType"`
 
+	// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+	// settings for your function URL.
 	Cors *Cors `type:"structure"`
 
+	// When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime)
+	// (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// CreationTime is a required field
 	CreationTime *string `type:"string" required:"true"`
 
+	// The Amazon Resource Name (ARN) of your function.
+	//
 	// FunctionArn is a required field
 	FunctionArn *string `type:"string" required:"true"`
 
+	// The HTTP URL endpoint for your function.
+	//
 	// FunctionUrl is a required field
 	FunctionUrl *string `min:"40" type:"string" required:"true"`
 
+	// When the function URL configuration was last updated, in ISO-8601 format
+	// (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// LastModifiedTime is a required field
 	LastModifiedTime *string `type:"string" required:"true"`
 }
@@ -11290,9 +11598,9 @@ func (s FunctionUrlConfig) GoString() string {
 	return s.String()
 }
 
-// SetAuthorizationType sets the AuthorizationType field's value.
-func (s *FunctionUrlConfig) SetAuthorizationType(v string) *FunctionUrlConfig {
-	s.AuthorizationType = &v
+// SetAuthType sets the AuthType field's value.
+func (s *FunctionUrlConfig) SetAuthType(v string) *FunctionUrlConfig {
+	s.AuthType = &v
 	return s
 }
 
@@ -12161,9 +12469,23 @@ func (s *GetFunctionOutput) SetTags(v map[string]*string) *GetFunctionOutput {
 type GetFunctionUrlConfigInput struct {
 	_ struct{} `type:"structure" nopayload:"true"`
 
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name - my-function.
+	//
+	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN - 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// The alias name.
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
@@ -12219,20 +12541,37 @@ func (s *GetFunctionUrlConfigInput) SetQualifier(v string) *GetFunctionUrlConfig
 type GetFunctionUrlConfigOutput struct {
 	_ struct{} `type:"structure"`
 
-	// AuthorizationType is a required field
-	AuthorizationType *string `type:"string" required:"true" enum:"AuthorizationType"`
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	//
+	// AuthType is a required field
+	AuthType *string `type:"string" required:"true" enum:"FunctionUrlAuthType"`
 
+	// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+	// settings for your function URL.
 	Cors *Cors `type:"structure"`
 
+	// When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime)
+	// (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// CreationTime is a required field
 	CreationTime *string `type:"string" required:"true"`
 
+	// The Amazon Resource Name (ARN) of your function.
+	//
 	// FunctionArn is a required field
 	FunctionArn *string `type:"string" required:"true"`
 
+	// The HTTP URL endpoint for your function.
+	//
 	// FunctionUrl is a required field
 	FunctionUrl *string `min:"40" type:"string" required:"true"`
 
+	// When the function URL configuration was last updated, in ISO-8601 format
+	// (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// LastModifiedTime is a required field
 	LastModifiedTime *string `type:"string" required:"true"`
 }
@@ -12255,9 +12594,9 @@ func (s GetFunctionUrlConfigOutput) GoString() string {
 	return s.String()
 }
 
-// SetAuthorizationType sets the AuthorizationType field's value.
-func (s *GetFunctionUrlConfigOutput) SetAuthorizationType(v string) *GetFunctionUrlConfigOutput {
-	s.AuthorizationType = &v
+// SetAuthType sets the AuthType field's value.
+func (s *GetFunctionUrlConfigOutput) SetAuthType(v string) *GetFunctionUrlConfigOutput {
+	s.AuthType = &v
 	return s
 }
 
@@ -12344,10 +12683,10 @@ type GetLayerVersionByArnOutput struct {
 	_ struct{} `type:"structure"`
 
 	// A list of compatible instruction set architectures (https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html).
-	CompatibleArchitectures []*string `type:"list"`
+	CompatibleArchitectures []*string `type:"list" enum:"Architecture"`
 
 	// The layer's compatible runtimes.
-	CompatibleRuntimes []*string `type:"list"`
+	CompatibleRuntimes []*string `type:"list" enum:"Runtime"`
 
 	// Details about the layer version.
 	Content *LayerVersionContentOutput `type:"structure"`
@@ -12511,10 +12850,10 @@ type GetLayerVersionOutput struct {
 	_ struct{} `type:"structure"`
 
 	// A list of compatible instruction set architectures (https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html).
-	CompatibleArchitectures []*string `type:"list"`
+	CompatibleArchitectures []*string `type:"list" enum:"Architecture"`
 
 	// The layer's compatible runtimes.
-	CompatibleRuntimes []*string `type:"list"`
+	CompatibleRuntimes []*string `type:"list" enum:"Runtime"`
 
 	// Details about the layer version.
 	Content *LayerVersionContentOutput `type:"structure"`
@@ -13742,6 +14081,9 @@ type InvokeInput struct {
 
 	// The JSON that you want to provide to your Lambda function as input.
 	//
+	// You can enter the JSON directly. For example, --payload '{ "key": "value"
+	// }'. You can also specify a file path. For example, --payload file://payload.json.
+	//
 	// Payload is a sensitive parameter and its value will be
 	// replaced with "sensitive" in string returned by InvokeInput's
 	// String and GoString methods.
@@ -14386,10 +14728,10 @@ type LayerVersionsListItem struct {
 	_ struct{} `type:"structure"`
 
 	// A list of compatible instruction set architectures (https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html).
-	CompatibleArchitectures []*string `type:"list"`
+	CompatibleArchitectures []*string `type:"list" enum:"Architecture"`
 
 	// The layer's compatible runtimes.
-	CompatibleRuntimes []*string `type:"list"`
+	CompatibleRuntimes []*string `type:"list" enum:"Runtime"`
 
 	// The date that the version was created, in ISO 8601 format. For example, 2018-11-27T15:10:45.123+0000.
 	CreatedDate *string `type:"string"`
@@ -15008,11 +15350,29 @@ func (s *ListFunctionEventInvokeConfigsOutput) SetNextMarker(v string) *ListFunc
 type ListFunctionUrlConfigsInput struct {
 	_ struct{} `type:"structure" nopayload:"true"`
 
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name - my-function.
+	//
+	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN - 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// Specify the pagination token that's returned by a previous request to retrieve
+	// the next page of results.
 	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
 
+	// The maximum number of function URLs to return in the response. Note that
+	// ListFunctionUrlConfigs returns a maximum of 50 items in each response, even
+	// if you set the number higher.
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" min:"1" type:"integer"`
 }
 
@@ -15074,9 +15434,12 @@ func (s *ListFunctionUrlConfigsInput) SetMaxItems(v int64) *ListFunctionUrlConfi
 type ListFunctionUrlConfigsOutput struct {
 	_ struct{} `type:"structure"`
 
+	// A list of function URL configurations.
+	//
 	// FunctionUrlConfigs is a required field
 	FunctionUrlConfigs []*FunctionUrlConfig `type:"list" required:"true"`
 
+	// The pagination token that's included if more results are available.
 	NextMarker *string `type:"string"`
 }
 
@@ -16264,11 +16627,11 @@ type PublishLayerVersionInput struct {
 	_ struct{} `type:"structure"`
 
 	// A list of compatible instruction set architectures (https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html).
-	CompatibleArchitectures []*string `type:"list"`
+	CompatibleArchitectures []*string `type:"list" enum:"Architecture"`
 
 	// A list of compatible function runtimes (https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html).
 	// Used for filtering with ListLayers and ListLayerVersions.
-	CompatibleRuntimes []*string `type:"list"`
+	CompatibleRuntimes []*string `type:"list" enum:"Runtime"`
 
 	// The function layer archive.
 	//
@@ -16376,10 +16739,10 @@ type PublishLayerVersionOutput struct {
 	_ struct{} `type:"structure"`
 
 	// A list of compatible instruction set architectures (https://docs.aws.amazon.com/lambda/latest/dg/foundation-arch.html).
-	CompatibleArchitectures []*string `type:"list"`
+	CompatibleArchitectures []*string `type:"list" enum:"Architecture"`
 
 	// The layer's compatible runtimes.
-	CompatibleRuntimes []*string `type:"list"`
+	CompatibleRuntimes []*string `type:"list" enum:"Runtime"`
 
 	// Details about the layer version.
 	Content *LayerVersionContentOutput `type:"structure"`
@@ -17880,7 +18243,18 @@ type SourceAccessConfiguration struct {
 	//    for SASL SCRAM-512 authentication of your self-managed Apache Kafka brokers.
 	//
 	//    * VIRTUAL_HOST - (Amazon MQ) The name of the virtual host in your RabbitMQ
-	//    broker. Lambda uses this RabbitMQ host as the event source.
+	//    broker. Lambda uses this RabbitMQ host as the event source. This property
+	//    cannot be specified in an UpdateEventSourceMapping API call.
+	//
+	//    * CLIENT_CERTIFICATE_TLS_AUTH - (Amazon MSK, Self-managed Apache Kafka)
+	//    The Secrets Manager ARN of your secret key containing the certificate
+	//    chain (X.509 PEM), private key (PKCS#8 PEM), and private key password
+	//    (optional) used for mutual TLS authentication of your MSK/Apache Kafka
+	//    brokers.
+	//
+	//    * SERVER_ROOT_CA_CERTIFICATE - (Self-managed Apache Kafka) The Secrets
+	//    Manager ARN of your secret key containing the root CA certificate (X.509
+	//    PEM) used for TLS encryption of your Apache Kafka brokers.
 	Type *string `type:"string" enum:"SourceAccessType"`
 
 	// The value for your chosen configuration in Type. For example: "URI": "arn:aws:secretsmanager:us-east-1:01234567890:secret:MyBrokerSecretName".
@@ -18621,6 +18995,8 @@ type UpdateEventSourceMappingInput struct {
 	//    * Amazon Managed Streaming for Apache Kafka - Default 100. Max 10,000.
 	//
 	//    * Self-Managed Apache Kafka - Default 100. Max 10,000.
+	//
+	//    * Amazon MQ (ActiveMQ and RabbitMQ) - Default 100. Max 10,000.
 	BatchSize *int64 `min:"1" type:"integer"`
 
 	// (Streams only) If the function returns an error, split the batch in two and
@@ -18636,6 +19012,11 @@ type UpdateEventSourceMappingInput struct {
 	//
 	// Default: True
 	Enabled *bool `type:"boolean"`
+
+	// (Streams and Amazon SQS) An object that defines the filter criteria that
+	// determine whether Lambda should process an event. For more information, see
+	// Lambda event filtering (https://docs.aws.amazon.com/lambda/latest/dg/invocation-eventfiltering.html).
+	FilterCriteria *FilterCriteria `type:"structure"`
 
 	// The name of the Lambda function.
 	//
@@ -18653,9 +19034,9 @@ type UpdateEventSourceMappingInput struct {
 	// function name, it's limited to 64 characters in length.
 	FunctionName *string `min:"1" type:"string"`
 
-	// (Streams only) A list of current response type enums applied to the event
-	// source mapping.
-	FunctionResponseTypes []*string `type:"list"`
+	// (Streams and Amazon SQS) A list of current response type enums applied to
+	// the event source mapping.
+	FunctionResponseTypes []*string `type:"list" enum:"FunctionResponseType"`
 
 	// (Streams and Amazon SQS standard queues) The maximum amount of time, in seconds,
 	// that Lambda spends gathering records before invoking the function.
@@ -18775,6 +19156,12 @@ func (s *UpdateEventSourceMappingInput) SetEnabled(v bool) *UpdateEventSourceMap
 	return s
 }
 
+// SetFilterCriteria sets the FilterCriteria field's value.
+func (s *UpdateEventSourceMappingInput) SetFilterCriteria(v *FilterCriteria) *UpdateEventSourceMappingInput {
+	s.FilterCriteria = v
+	return s
+}
+
 // SetFunctionName sets the FunctionName field's value.
 func (s *UpdateEventSourceMappingInput) SetFunctionName(v string) *UpdateEventSourceMappingInput {
 	s.FunctionName = &v
@@ -18833,8 +19220,9 @@ type UpdateFunctionCodeInput struct {
 	_ struct{} `type:"structure"`
 
 	// The instruction set architecture that the function supports. Enter a string
-	// array with one of the valid values. The default value is x86_64.
-	Architectures []*string `min:"1" type:"list"`
+	// array with one of the valid values (arm64 or x86_64). The default value is
+	// x86_64.
+	Architectures []*string `min:"1" type:"list" enum:"Architecture"`
 
 	// Set to true to validate the request parameters and access permissions without
 	// modifying the function code.
@@ -18856,7 +19244,8 @@ type UpdateFunctionCodeInput struct {
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
-	// URI of a container image in the Amazon ECR registry.
+	// URI of a container image in the Amazon ECR registry. Do not use for a function
+	// defined with a .zip file archive.
 	ImageUri *string `type:"string"`
 
 	// Set to true to publish a new version of the function after updating the code.
@@ -18869,17 +19258,20 @@ type UpdateFunctionCodeInput struct {
 	RevisionId *string `type:"string"`
 
 	// An Amazon S3 bucket in the same Amazon Web Services Region as your function.
-	// The bucket can be in a different Amazon Web Services account.
+	// The bucket can be in a different Amazon Web Services account. Use only with
+	// a function defined with a .zip file archive deployment package.
 	S3Bucket *string `min:"3" type:"string"`
 
-	// The Amazon S3 key of the deployment package.
+	// The Amazon S3 key of the deployment package. Use only with a function defined
+	// with a .zip file archive deployment package.
 	S3Key *string `min:"1" type:"string"`
 
 	// For versioned objects, the version of the deployment package object to use.
 	S3ObjectVersion *string `min:"1" type:"string"`
 
 	// The base64-encoded contents of the deployment package. Amazon Web Services
-	// SDK and Amazon Web Services CLI clients handle the encoding for you.
+	// SDK and Amazon Web Services CLI clients handle the encoding for you. Use
+	// only with a function defined with a .zip file archive deployment package.
 	//
 	// ZipFile is a sensitive parameter and its value will be
 	// replaced with "sensitive" in string returned by UpdateFunctionCodeInput's
@@ -19009,6 +19401,10 @@ type UpdateFunctionConfigurationInput struct {
 	// Environment variables that are accessible from function code during execution.
 	Environment *Environment `type:"structure"`
 
+	// The size of the function’s /tmp directory in MB. The default value is 512,
+	// but can be any whole number between 512 and 10240 MB.
+	EphemeralStorage *EphemeralStorage `type:"structure"`
+
 	// Connection settings for an Amazon EFS file system.
 	FileSystemConfigs []*FileSystemConfig `type:"list"`
 
@@ -19029,9 +19425,10 @@ type UpdateFunctionConfigurationInput struct {
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
 	// The name of the method within your code that Lambda calls to execute your
-	// function. The format includes the file name. It can also include namespaces
-	// and other qualifiers, depending on the runtime. For more information, see
-	// Programming Model (https://docs.aws.amazon.com/lambda/latest/dg/programming-model-v2.html).
+	// function. Handler is required if the deployment package is a .zip file archive.
+	// The format includes the file name. It can also include namespaces and other
+	// qualifiers, depending on the runtime. For more information, see Programming
+	// Model (https://docs.aws.amazon.com/lambda/latest/dg/programming-model-v2.html).
 	Handler *string `type:"string"`
 
 	// Container image configuration values (https://docs.aws.amazon.com/lambda/latest/dg/images-parms.html)
@@ -19062,6 +19459,7 @@ type UpdateFunctionConfigurationInput struct {
 	Role *string `type:"string"`
 
 	// The identifier of the function's runtime (https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html).
+	// Runtime is required if the deployment package is a .zip file archive.
 	Runtime *string `type:"string" enum:"Runtime"`
 
 	// The amount of time (in seconds) that Lambda allows a function to run before
@@ -19113,6 +19511,11 @@ func (s *UpdateFunctionConfigurationInput) Validate() error {
 	if s.Timeout != nil && *s.Timeout < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("Timeout", 1))
 	}
+	if s.EphemeralStorage != nil {
+		if err := s.EphemeralStorage.Validate(); err != nil {
+			invalidParams.AddNested("EphemeralStorage", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.FileSystemConfigs != nil {
 		for i, v := range s.FileSystemConfigs {
 			if v == nil {
@@ -19145,6 +19548,12 @@ func (s *UpdateFunctionConfigurationInput) SetDescription(v string) *UpdateFunct
 // SetEnvironment sets the Environment field's value.
 func (s *UpdateFunctionConfigurationInput) SetEnvironment(v *Environment) *UpdateFunctionConfigurationInput {
 	s.Environment = v
+	return s
+}
+
+// SetEphemeralStorage sets the EphemeralStorage field's value.
+func (s *UpdateFunctionConfigurationInput) SetEphemeralStorage(v *EphemeralStorage) *UpdateFunctionConfigurationInput {
+	s.EphemeralStorage = v
 	return s
 }
 
@@ -19419,13 +19828,33 @@ func (s *UpdateFunctionEventInvokeConfigOutput) SetMaximumRetryAttempts(v int64)
 type UpdateFunctionUrlConfigInput struct {
 	_ struct{} `type:"structure"`
 
-	AuthorizationType *string `type:"string" enum:"AuthorizationType"`
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	AuthType *string `type:"string" enum:"FunctionUrlAuthType"`
 
+	// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+	// settings for your function URL.
 	Cors *Cors `type:"structure"`
 
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name - my-function.
+	//
+	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN - 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
 	// FunctionName is a required field
 	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
 
+	// The alias name.
 	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
 }
 
@@ -19466,9 +19895,9 @@ func (s *UpdateFunctionUrlConfigInput) Validate() error {
 	return nil
 }
 
-// SetAuthorizationType sets the AuthorizationType field's value.
-func (s *UpdateFunctionUrlConfigInput) SetAuthorizationType(v string) *UpdateFunctionUrlConfigInput {
-	s.AuthorizationType = &v
+// SetAuthType sets the AuthType field's value.
+func (s *UpdateFunctionUrlConfigInput) SetAuthType(v string) *UpdateFunctionUrlConfigInput {
+	s.AuthType = &v
 	return s
 }
 
@@ -19493,20 +19922,37 @@ func (s *UpdateFunctionUrlConfigInput) SetQualifier(v string) *UpdateFunctionUrl
 type UpdateFunctionUrlConfigOutput struct {
 	_ struct{} `type:"structure"`
 
-	// AuthorizationType is a required field
-	AuthorizationType *string `type:"string" required:"true" enum:"AuthorizationType"`
+	// The type of authentication that your function URL uses. Set to AWS_IAM if
+	// you want to restrict access to authenticated IAM users only. Set to NONE
+	// if you want to bypass IAM authentication to create a public endpoint. For
+	// more information, see Security and auth model for Lambda function URLs (https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html).
+	//
+	// AuthType is a required field
+	AuthType *string `type:"string" required:"true" enum:"FunctionUrlAuthType"`
 
+	// The cross-origin resource sharing (CORS) (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+	// settings for your function URL.
 	Cors *Cors `type:"structure"`
 
+	// When the function URL was created, in ISO-8601 format (https://www.w3.org/TR/NOTE-datetime)
+	// (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// CreationTime is a required field
 	CreationTime *string `type:"string" required:"true"`
 
+	// The Amazon Resource Name (ARN) of your function.
+	//
 	// FunctionArn is a required field
 	FunctionArn *string `type:"string" required:"true"`
 
+	// The HTTP URL endpoint for your function.
+	//
 	// FunctionUrl is a required field
 	FunctionUrl *string `min:"40" type:"string" required:"true"`
 
+	// When the function URL configuration was last updated, in ISO-8601 format
+	// (https://www.w3.org/TR/NOTE-datetime) (YYYY-MM-DDThh:mm:ss.sTZD).
+	//
 	// LastModifiedTime is a required field
 	LastModifiedTime *string `type:"string" required:"true"`
 }
@@ -19529,9 +19975,9 @@ func (s UpdateFunctionUrlConfigOutput) GoString() string {
 	return s.String()
 }
 
-// SetAuthorizationType sets the AuthorizationType field's value.
-func (s *UpdateFunctionUrlConfigOutput) SetAuthorizationType(v string) *UpdateFunctionUrlConfigOutput {
-	s.AuthorizationType = &v
+// SetAuthType sets the AuthType field's value.
+func (s *UpdateFunctionUrlConfigOutput) SetAuthType(v string) *UpdateFunctionUrlConfigOutput {
+	s.AuthType = &v
 	return s
 }
 
@@ -19674,22 +20120,6 @@ func Architecture_Values() []string {
 }
 
 const (
-	// AuthorizationTypeNone is a AuthorizationType enum value
-	AuthorizationTypeNone = "NONE"
-
-	// AuthorizationTypeAwsIam is a AuthorizationType enum value
-	AuthorizationTypeAwsIam = "AWS_IAM"
-)
-
-// AuthorizationType_Values returns all elements of the AuthorizationType enum
-func AuthorizationType_Values() []string {
-	return []string{
-		AuthorizationTypeNone,
-		AuthorizationTypeAwsIam,
-	}
-}
-
-const (
 	// CodeSigningPolicyWarn is a CodeSigningPolicy enum value
 	CodeSigningPolicyWarn = "Warn"
 
@@ -19746,6 +20176,22 @@ const (
 func FunctionResponseType_Values() []string {
 	return []string{
 		FunctionResponseTypeReportBatchItemFailures,
+	}
+}
+
+const (
+	// FunctionUrlAuthTypeNone is a FunctionUrlAuthType enum value
+	FunctionUrlAuthTypeNone = "NONE"
+
+	// FunctionUrlAuthTypeAwsIam is a FunctionUrlAuthType enum value
+	FunctionUrlAuthTypeAwsIam = "AWS_IAM"
+)
+
+// FunctionUrlAuthType_Values returns all elements of the FunctionUrlAuthType enum
+func FunctionUrlAuthType_Values() []string {
+	return []string{
+		FunctionUrlAuthTypeNone,
+		FunctionUrlAuthTypeAwsIam,
 	}
 }
 
@@ -19959,6 +20405,9 @@ const (
 	// RuntimeDotnetcore31 is a Runtime enum value
 	RuntimeDotnetcore31 = "dotnetcore3.1"
 
+	// RuntimeDotnet6 is a Runtime enum value
+	RuntimeDotnet6 = "dotnet6"
+
 	// RuntimeNodejs43Edge is a Runtime enum value
 	RuntimeNodejs43Edge = "nodejs4.3-edge"
 
@@ -20000,6 +20449,7 @@ func Runtime_Values() []string {
 		RuntimeDotnetcore20,
 		RuntimeDotnetcore21,
 		RuntimeDotnetcore31,
+		RuntimeDotnet6,
 		RuntimeNodejs43Edge,
 		RuntimeGo1X,
 		RuntimeRuby25,
