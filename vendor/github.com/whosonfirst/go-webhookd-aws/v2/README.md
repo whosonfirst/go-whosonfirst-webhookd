@@ -1,8 +1,10 @@
 # go-webhookd-aws
 
-go-webhookd support for Amazon Web Services (AWS)
+Go package to implement the `whosonfirst/go-webhookd` interfaces for dispatching webhooks originating from GitHub to AWS services.
 
-## go-webhookd
+## Documentation
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-webhookd-aws.svg)](https://pkg.go.dev/github.com/whosonfirst/go-webhookd-aws)
 
 Before you begin please [read the go-webhookd documentation](https://github.com/whosonfirst/go-webhookd/blob/master/README.md) for an overview of concepts and principles.
 

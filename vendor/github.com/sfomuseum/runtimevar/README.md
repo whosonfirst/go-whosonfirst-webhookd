@@ -2,6 +2,10 @@
 
 Simple wrapper around the Go Cloud runtimevar package
 
+## Documentation
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/sfomuseum/runtimevar.svg)](https://pkg.go.dev/github.com/sfomuseum/runtimevar)
+
 ## Example
 
 ```

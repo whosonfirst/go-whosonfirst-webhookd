@@ -1,8 +1,12 @@
 # go-webhookd-github
 
-go-webhookd support for GitHub.
+Go package to implement the `whosonfirst/go-webhookd` interfaces for receiving and transforming webhooks originating from GitHub.
 
-## go-webhookd
+## Documentation
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-webhookd.svg)](https://pkg.go.dev/github.com/whosonfirst/go-webhookd)
+
+### go-webhookd
 
 Before you begin please [read the go-webhookd documentation](https://github.com/whosonfirst/go-webhookd/blob/master/README.md) for an overview of concepts and principles.
 

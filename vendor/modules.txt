@@ -8,9 +8,9 @@ github.com/aaronland/go-aws-session
 github.com/aaronland/go-chicken
 github.com/aaronland/go-chicken/emoji
 github.com/aaronland/go-chicken/strings
-# github.com/aaronland/go-http-server v0.1.0
+# github.com/aaronland/go-http-server v1.0.0
 github.com/aaronland/go-http-server
-# github.com/aaronland/go-roster v0.0.2
+# github.com/aaronland/go-roster v1.0.0
 github.com/aaronland/go-roster
 # github.com/aaronland/go-string v0.1.2
 github.com/aaronland/go-string/dsn
@@ -23,14 +23,14 @@ github.com/aaronland/go-ucd/v13/unihan
 github.com/aaronland/gocloud-blob-s3
 # github.com/akrylysov/algnhsa v0.12.1
 github.com/akrylysov/algnhsa
-# github.com/aws/aws-lambda-go v1.31.0
+# github.com/aws/aws-lambda-go v1.32.0
 ## explicit
 github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
 github.com/aws/aws-lambda-go/lambda/messages
 github.com/aws/aws-lambda-go/lambdacontext
-# github.com/aws/aws-sdk-go v1.44.3
+# github.com/aws/aws-sdk-go v1.44.41
 ## explicit
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
@@ -208,7 +208,7 @@ github.com/patrickmn/go-cache
 ## explicit
 github.com/sfomuseum/go-flags/flagset
 github.com/sfomuseum/go-flags/multi
-# github.com/sfomuseum/runtimevar v0.0.8
+# github.com/sfomuseum/runtimevar v1.0.0
 ## explicit
 github.com/sfomuseum/runtimevar
 # github.com/whosonfirst/go-cache v0.5.0
@@ -218,16 +218,16 @@ github.com/whosonfirst/go-cache
 github.com/whosonfirst/go-cache-blob
 # github.com/whosonfirst/go-ioutil v1.0.0
 github.com/whosonfirst/go-ioutil
-# github.com/whosonfirst/go-webhookd-aws/v2 v2.2.0
+# github.com/whosonfirst/go-webhookd-aws/v2 v2.3.0
 ## explicit
 github.com/whosonfirst/go-webhookd-aws/v2
-# github.com/whosonfirst/go-webhookd-github v1.0.2
+# github.com/whosonfirst/go-webhookd-github v1.1.0
 ## explicit
 github.com/whosonfirst/go-webhookd-github
-# github.com/whosonfirst/go-webhookd-gocloud v0.0.7
+# github.com/whosonfirst/go-webhookd-gocloud v1.0.0
 ## explicit
 github.com/whosonfirst/go-webhookd-gocloud
-# github.com/whosonfirst/go-webhookd/v3 v3.0.5
+# github.com/whosonfirst/go-webhookd/v3 v3.1.0
 ## explicit
 github.com/whosonfirst/go-webhookd/v3
 github.com/whosonfirst/go-webhookd/v3/config

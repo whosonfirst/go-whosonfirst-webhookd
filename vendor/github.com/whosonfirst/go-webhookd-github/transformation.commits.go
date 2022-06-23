@@ -5,11 +5,10 @@ import (
 	"context"
 	"encoding/csv"
 	"encoding/json"
-	_ "fmt"
+	"fmt"
 	gogithub "github.com/google/go-github/github"
 	"github.com/whosonfirst/go-webhookd/v3"
 	"github.com/whosonfirst/go-webhookd/v3/transformation"
-	_ "log"
 	"net/url"
 	"strconv"
 )
@@ -26,19 +25,34 @@ func init() {
 
 // see also: https://github.com/whosonfirst/go-whosonfirst-updated/issues/8
 
+// GitHubCommitsTransformation implements the `webhookd.WebhookTransformation` interface for transforming GitHub
+// commit webhook messages in to CSV data containing: the commit hash, the name of the repository and the path
+// to the file commited.
 type GitHubCommitsTransformation struct {
 	webhookd.WebhookTransformation
-	ExcludeAdditions     bool
+	// ExcludeAdditions is a boolean flag to exclude newly added files from the final output.
+	ExcludeAdditions bool
+	// ExcludeModifications is a boolean flag to exclude updated (modified) files from the final output.
 	ExcludeModifications bool
-	ExcludeDeletions     bool
+	// ExcludeDeletions is a boolean flag to exclude deleted files from the final output.
+	ExcludeDeletions bool
 }
 
+// NewGitHubCommitsTransformation() creates a new `GitHubCommitsTransformation` instance, configured by 'uri'
+// which is expected to take the form of:
+//
+//	githubcommits://?{PARAMETERS}
+//
+// Where {PARAMTERS} is:
+// * `?exclude_additions` An optional boolean value to exclude newly added files from the final output.
+// * `?exclude_modifications` An optional boolean value to exclude update (modified) files from the final output.
+// * `?exclude_deletions` An optional boolean value to exclude deleted files from the final output.
 func NewGitHubCommitsTransformation(ctx context.Context, uri string) (webhookd.WebhookTransformation, error) {
 
 	u, err := url.Parse(uri)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse URI, %w", err)
 	}
 
 	q := u.Query()
@@ -56,7 +70,7 @@ func NewGitHubCommitsTransformation(ctx context.Context, uri string) (webhookd.W
 		v, err := strconv.ParseBool(str_additions)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse '%s', %w", str_additions, err)
 		}
 
 		exclude_additions = v
@@ -67,7 +81,7 @@ func NewGitHubCommitsTransformation(ctx context.Context, uri string) (webhookd.W
 		v, err := strconv.ParseBool(str_modifications)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse '%s', %w", str_modifications, err)
 		}
 
 		exclude_modifications = v
@@ -78,7 +92,7 @@ func NewGitHubCommitsTransformation(ctx context.Context, uri string) (webhookd.W
 		v, err := strconv.ParseBool(str_deletions)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse '%s', %w", str_deletions, err)
 		}
 
 		exclude_deletions = v
@@ -93,6 +107,8 @@ func NewGitHubCommitsTransformation(ctx context.Context, uri string) (webhookd.W
 	return &p, nil
 }
 
+// Transform() transforms 'body' (which is assumed to be a GitHub commit webhook message) in to CSV data containing:
+// the commit hash, the name of the repository and the path to the file commited.
 func (p *GitHubCommitsTransformation) Transform(ctx context.Context, body []byte) ([]byte, *webhookd.WebhookError) {
 
 	select {

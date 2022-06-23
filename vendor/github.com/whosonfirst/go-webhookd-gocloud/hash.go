@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 )
 
+// HashBody returns the hex-encoded SHA-256 sum of ' body'
 func HashBody(ctx context.Context, body []byte) (string, error) {
 
 	hash := sha256.Sum256(body)

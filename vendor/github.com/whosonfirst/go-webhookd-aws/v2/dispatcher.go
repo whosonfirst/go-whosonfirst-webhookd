@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"github.com/aaronland/go-aws-session"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/lambda"
@@ -23,19 +23,30 @@ func init() {
 	}
 }
 
+// LambdaDispatcher implements the `webhookd.WebhookDispatcher` interface for dispatching messages to an AWS Lambda function.
 type LambdaDispatcher struct {
 	webhookd.WebhookDispatcher
-	LambdaFunction  string
-	LambdaService   *lambda.Lambda
+	// LambdaFunction is the name of the Lambda function to invoke.
+	LambdaFunction string
+	// LambdaService is `aws-sdk-go/service/lambda.Lambda` instance use to invoke a Lambda function.
+	LambdaService *lambda.Lambda
+	// invocation_type is the name of AWS Lambda invocation type.
 	invocation_type string
 }
 
+// NewLambdaDispatcher returns a new `LambdaDispatcher` instance configured by 'uri' in the form of:
+//
+// 	lambda://{FUNCTION_NAME}?{PARAMETERS}
+//
+// Where {PARAMETERS} are:
+// * `dsn=` A valid `aaronland/go-aws-session` string used to create an AWS session instance.
+// * `invocation_type=` The name of AWS Lambda invocation type. Valid options are: RequestResponse, Event, DryRun.
 func NewLambdaDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatcher, error) {
 
 	u, err := url.Parse(uri)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse URI, %w", err)
 	}
 
 	lambda_function := u.Host
@@ -47,7 +58,7 @@ func NewLambdaDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispa
 	lambda_sess, err := session.NewSessionWithDSN(lambda_dsn)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create new AWS session, %w", err)
 	}
 
 	invocation_type := q.Get("invocation_type")
@@ -58,7 +69,7 @@ func NewLambdaDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispa
 	case "RequestResponse", "Event", "DryRun":
 		// pass
 	default:
-		return nil, errors.New("Invalid invocation_type parameter")
+		return nil, fmt.Errorf("Invalid invocation_type parameter")
 	}
 
 	lambda_svc := lambda.New(lambda_sess)
@@ -72,6 +83,7 @@ func NewLambdaDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispa
 	return &d, nil
 }
 
+// Dispatch() relays 'body' as base64-endoded JSON string to the AWS Lambda function defined when 'd' was instantiated.
 func (d *LambdaDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.WebhookError {
 
 	select {

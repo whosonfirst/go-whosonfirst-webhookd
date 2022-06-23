@@ -25,12 +25,20 @@ func init() {
 
 }
 
+// BlobDispatcher implements the `webhookd.WebhookDispatcher` interface for dispatching messages to a gocloud.dev/blob.Bucket instance.
+// Messages are written to the underlying bucket instance with a filename derived from the SHA-256 hash of the message body.
 type BlobDispatcher struct {
 	webhookd.WebhookDispatcher
+	// bucket is the gocloud.dev/blob.Bucket instance that webhookd messages will be dispatched (written) to.
 	bucket *blob.Bucket
+	// prefix is an optional prefix to append when writing messages to `bucket`.
 	prefix string
 }
 
+// NewBlobDispatcher returns a new `BlobDispatcher` instance configured by 'uri' which is expected
+// to be a valid and registered `gocloud.dev/blob.Bucket` URI. The following extra parameters are
+// supported (and removed before the underelying bucket instance is created):
+// - `?dispatch_prefix=_ts_` If present a unix timestamp will be prepended to the final filename.
 func NewBlobDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatcher, error) {
 
 	u, err := url.Parse(uri)
@@ -64,6 +72,8 @@ func NewBlobDispatcher(ctx context.Context, uri string) (webhookd.WebhookDispatc
 	return &d, nil
 }
 
+// Dispatch will write 'body' to the underlying `gocloud.dev/blob.Bucket` instance contained
+// by 'd'. Filenames are derived from the SHA-256 hash for 'body'.
 func (d *BlobDispatcher) Dispatch(ctx context.Context, body []byte) *webhookd.WebhookError {
 
 	select {

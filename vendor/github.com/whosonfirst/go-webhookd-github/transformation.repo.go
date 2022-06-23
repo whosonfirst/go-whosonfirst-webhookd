@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	gogithub "github.com/google/go-github/github"
 	"github.com/whosonfirst/go-webhookd/v3"
 	"github.com/whosonfirst/go-webhookd/v3/transformation"
-	_ "log"
 	"net/url"
 	"strconv"
 )
@@ -24,19 +24,33 @@ func init() {
 
 // see also: https://github.com/whosonfirst/go-whosonfirst-updated/issues/8
 
+// GitHubRepoTransformation implements the `webhookd.WebhookTransformation` interface for transforming GitHub
+// commit webhook messages in to the name of the repository where the commit occurred.
 type GitHubRepoTransformation struct {
 	webhookd.WebhookTransformation
-	ExcludeAdditions     bool
+	// ExcludeAdditions is a boolean flag to exclude newly added files from consideration.
+	ExcludeAdditions bool
+	// ExcludeModifications is a boolean flag to exclude updated (modified) files from consideration.
 	ExcludeModifications bool
-	ExcludeDeletions     bool
+	// ExcludeDeletions is a boolean flag to exclude updated (modified) files from consideration.
+	ExcludeDeletions bool
 }
 
+// NewGitHubRepoTransformation() creates a new `GitHubRepoTransformation` instance, configured by 'uri'
+// which is expected to take the form of:
+//
+//	githubrepo://?{PARAMETERS}
+//
+// Where {PARAMTERS} is:
+// * `?exclude_additions` An optional boolean value to exclude newly added files from consideration.
+// * `?exclude_modifications` An optional boolean value to exclude update (modified) files from consideration.
+// * `?exclude_deletions` An optional boolean value to exclude deleted files from consideration.
 func NewGitHubRepoTransformation(ctx context.Context, uri string) (webhookd.WebhookTransformation, error) {
 
 	u, err := url.Parse(uri)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse URI, %w", err)
 	}
 
 	q := u.Query()
@@ -54,7 +68,7 @@ func NewGitHubRepoTransformation(ctx context.Context, uri string) (webhookd.Webh
 		v, err := strconv.ParseBool(str_additions)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse '%s', %w", str_additions, err)
 		}
 
 		exclude_additions = v
@@ -65,7 +79,7 @@ func NewGitHubRepoTransformation(ctx context.Context, uri string) (webhookd.Webh
 		v, err := strconv.ParseBool(str_modifications)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse '%s', %w", str_modifications, err)
 		}
 
 		exclude_modifications = v
@@ -76,7 +90,7 @@ func NewGitHubRepoTransformation(ctx context.Context, uri string) (webhookd.Webh
 		v, err := strconv.ParseBool(str_deletions)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse '%s', %w", str_deletions, err)
 		}
 
 		exclude_deletions = v
@@ -91,6 +105,8 @@ func NewGitHubRepoTransformation(ctx context.Context, uri string) (webhookd.Webh
 	return &p, nil
 }
 
+// Transform() transforms 'body' (which is assumed to be a GitHub commit webhook message) in to name of the repository
+// where the commit occurred.
 func (p *GitHubRepoTransformation) Transform(ctx context.Context, body []byte) ([]byte, *webhookd.WebhookError) {
 
 	select {

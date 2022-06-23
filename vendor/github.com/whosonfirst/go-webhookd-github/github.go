@@ -5,11 +5,11 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
 	"fmt"
 	gogithub "github.com/google/go-github/github"
 )
 
+// GenerateSignature() generates a GitHub-compatiable signature derived from 'body' and 'secret'.
 func GenerateSignature(body string, secret string) (string, error) {
 
 	mac := hmac.New(sha1.New, []byte(secret))
@@ -27,6 +27,7 @@ func GenerateSignature(body string, secret string) (string, error) {
 // and not a typed thing that the compiler knows what to do with after
 // the fact... (20161017/thisisaaronland)
 
+// UnmarshalEvent unmarshals a GitHub event message derived from 'body' in to an interface of type 'event_type'.
 func UnmarshalEvent(event_type string, body []byte) (interface{}, error) {
 
 	var event interface{}
@@ -82,13 +83,13 @@ func UnmarshalEvent(event_type string, body []byte) (interface{}, error) {
 	}
 
 	if !ok {
-		return nil, errors.New("Unknown event type")
+		return nil, fmt.Errorf("Unknown event type: %s", event_type)
 	}
 
 	err := json.Unmarshal(body, &event)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to unmarshal body, %w", err)
 	}
 
 	return event, nil

@@ -9,10 +9,11 @@ import (
 	"context"
 	"crypto/hmac"
 	"encoding/json"
+	"fmt"
 	gogithub "github.com/google/go-github/github"
 	"github.com/whosonfirst/go-webhookd/v3"
 	"github.com/whosonfirst/go-webhookd/v3/receiver"
-	"io/ioutil"
+	"io"
 	_ "log"
 	"net/http"
 	"net/url"
@@ -28,18 +29,28 @@ func init() {
 	}
 }
 
+// GitHubReceiver implements the `webhookd.WebhookReceiver` interface for receiving webhook messages from GitHub.
 type GitHubReceiver struct {
 	webhookd.WebhookReceiver
+	// secret is the shared secret used to generate signatures to validate messages.
 	secret string
-	ref    string
+	// ref is the branch (reference) for which messages will be processed. Optional.
+	ref string
 }
 
+// NewGitHubReceiver instantiates a new `GitHubReceiver` for receiving webhook messages from GitHub, configured
+// by 'uri' which is expected to take the form of:
+//
+//	github://?secret={SECRET}&ref={BRANCH}
+//
+// Where {SECRET} is the shared secret used to generate signatures to validate messages and {BRANCH} is the optional
+// branch (reference) name to limit message processing to.
 func NewGitHubReceiver(ctx context.Context, uri string) (webhookd.WebhookReceiver, error) {
 
 	u, err := url.Parse(uri)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse URI, %w", err)
 	}
 
 	q := u.Query()
@@ -55,6 +66,10 @@ func NewGitHubReceiver(ctx context.Context, uri string) (webhookd.WebhookReceive
 	return wh, nil
 }
 
+// Receive() returns the body of the message in 'req'. It ensures that messages are sent as HTTP `POST` requests,
+// that both `X-GitHub-Event` and `X-Hub-Signature` headers are present, that message body produces a valid signature
+// using the secret used to create 'wh' and, if necessary, that the message is associated with the branch used to
+// create 'wh'.
 func (wh GitHubReceiver) Receive(ctx context.Context, req *http.Request) ([]byte, *webhookd.WebhookError) {
 
 	select {
@@ -103,7 +118,7 @@ func (wh GitHubReceiver) Receive(ctx context.Context, req *http.Request) ([]byte
 	// remember that you want to configure GitHub to send webhooks as 'application/json'
 	// or all this code will get confused (20190212/thisisaaronland)
 
-	body, err := ioutil.ReadAll(req.Body)
+	body, err := io.ReadAll(req.Body)
 
 	if err != nil {
 
