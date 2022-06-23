@@ -10,7 +10,6 @@ require (
 	github.com/aws/aws-sdk-go v1.44.41
 	github.com/sfomuseum/go-flags v0.8.2
 	github.com/sfomuseum/runtimevar v1.0.0
-	github.com/whosonfirst/go-cache-blob v0.2.0
 	github.com/whosonfirst/go-webhookd-aws/v2 v2.3.0
 	github.com/whosonfirst/go-webhookd-github v1.1.0
 	github.com/whosonfirst/go-webhookd-gocloud v1.0.0

@@ -18,23 +18,6 @@ import (
 
 Please consult the [go-webhook configuration documentation](https://github.com/whosonfirst/go-webhookd#config-files) as well as the [example config file](docs/config/config.json.example).
 
-## Dispatchers
-
-### FindingAidRepo
-
-The `FindingAidRepoDispatcher` dispatcher implements the `webhookd.WebHookDispatcher` interface and takes as input a []byte containing CSV-encoded rows produced by the `go-webhookd-github.GitHubCommitsTransformation` package and creates a corresponding `go-whosonfirst-findingaid/repo.FindingAidResponse` record for each row. It is defined as a URI string in the form of:
-
-```
-findingaid-repo://?cache=s3blob%3A%2F%2F{BUCKET}%3Fregion%3D{REGION}%26prefix%3D{PREFIX}%2F%26credentials%3Diam:&acl=public-read"
-```
-
-#### Properties
-
-| Name | Value | Description | Required |
-| --- | --- | --- | --- |
-| cache | string | A valid [whosonfirst/go-cache](https://github.com/whosonfirst/go-cache) URI string. | yes |
-
-
 ## Tools
 
 ### webhookd
@@ -51,10 +34,6 @@ This build of the `webhookd` binary is the same as the tool defined in [whosonfi
 import (
 	// necessary for blob dispatcher and the findingaid-repo dispatcher (by way of the go-whosonfirst-findingaid cache)
 	_ "github.com/aaronland/gocloud-blob-s3"                  
-	// necessary for findingaid-repo dispatcher
-	_ "github.com/whosonfirst/go-cache-blob"
-	// necessary for findingaid-repo dispatcher	
-	_ "github.com/whosonfirst/go-whosonfirst-findingaid/repo"
 	// necessary for blob dispatcher	
 	_ "gocloud.dev/blob/fileblob"                             
 )
@@ -66,8 +45,6 @@ import (
 	_ "github.com/whosonfirst/go-webhookd-github"
 	// defines the blob dispatcher	
 	_ "github.com/whosonfirst/go-webhookd-gocloud"
-	// defines the findingaid-repo dispatcher	
-	_ "github.com/whosonfirst/go-whosonfirst-webhookd/dispatcher" 
 )
 ```
 

@@ -5,8 +5,6 @@ package main
 import (
 	// necessary for blob dispatcher
 	_ "github.com/aaronland/gocloud-blob-s3"
-	// necessary for findingaid-repo dispatcher
-	_ "github.com/whosonfirst/go-cache-blob"
 	// necessary for blob dispatcher
 	_ "gocloud.dev/blob/fileblob"
 )
