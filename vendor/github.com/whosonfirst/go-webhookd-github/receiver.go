@@ -111,7 +111,7 @@ func (wh GitHubReceiver) Receive(ctx context.Context, req *http.Request) ([]byte
 	}
 
 	if event_type == "ping" {
-		err := &webhookd.WebhookError{Code: -1, Message: "ping message is a no-op"}
+		err := &webhookd.WebhookError{Code: webhookd.UnhandledEvent, Message: "ping message is a no-op"}
 		return nil, err
 	}
 
