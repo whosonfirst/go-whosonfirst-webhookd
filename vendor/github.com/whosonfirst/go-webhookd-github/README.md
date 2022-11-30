@@ -4,7 +4,7 @@ Go package to implement the `whosonfirst/go-webhookd` interfaces for receiving a
 
 ## Documentation
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-webhookd.svg)](https://pkg.go.dev/github.com/whosonfirst/go-webhookd)
+[![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-webhookd-github.svg)](https://pkg.go.dev/github.com/whosonfirst/go-webhookd-github)
 
 ### go-webhookd
 

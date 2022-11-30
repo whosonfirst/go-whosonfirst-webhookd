@@ -6,7 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	gogithub "github.com/google/go-github/github"
+	gogithub "github.com/google/go-github/v48/github"
 )
 
 // GenerateSignature() generates a GitHub-compatiable signature derived from 'body' and 'secret'.
