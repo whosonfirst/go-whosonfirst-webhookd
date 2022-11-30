@@ -1,31 +1,45 @@
 {
-    "daemon": "lambda://",
+    "daemon": "http://localhost:8080",
     "receivers": {
 	"insecure": "insecure://",
-	"github_index" : "github://?secret={SECRET}&ref=refs/heads/master"		
+	"github_index" : "github://?secret=s33kret&ref=refs/heads/master"		
     },	
     "transformations": {
 	"null": "null://",
 	"chicken": "chicken://zxx",
 	"clucking": "chicken://eng?clucking=true",
 	"commits": "githubcommits://",
-	"repo" : "githubrepo://"	
+	"repo" : "githubrepo://",
+	"commits-halt" : "githubrepo://?halt_on_message=SWIM",
+	"commits-prepend" : "githubrepo://?prepend_message=true"			
     },
     "dispatchers": {
 	"null": "null://",
 	"log": "log://",
-	"blob": "file:///tmp/webhookd/?metadata=skip",
-	"indexing" : "lambda://{FUNCTION}?dsn=credentials={CREDENTIALS}%20region={REGION}"	
+	"indexing" : "lambda://FunctionName?dsn=credentials=session%20region=us-east-1",
+	"indexing-halt" : "lambda://FunctionName?dsn=credentials=session%20region=us-east-1&halt_on_message=SWIM"		
     },
     "webhooks": [
 	{
 	    "endpoint": "/insecure-test",
 	    "receiver": "insecure",
 	    "transformations": [ "commits" ],
-	    "dispatchers": [ "log", "blob" ]
+	    "dispatchers": [ "log" ]
 	},
 	{
-	    "endpoint": "/indexing-test/{SECRET}",
+	    "endpoint": "/insecure-halting-transformation",
+	    "receiver": "insecure",
+	    "transformations": [ "commits-halt" ],
+	    "dispatchers": [ "log" ]
+	},
+	{
+	    "endpoint": "/insecure-halting-dispatcher",
+	    "receiver": "insecure",
+	    "transformations": [ "commits-prepend" ],
+	    "dispatchers": [ "log", "indexing-halt" ]
+	},		
+	{
+	    "endpoint": "/indexing-test/s33kret",
 	    "receiver": "github_index",
 	    "transformations": [ "repo" ],
 	    "dispatchers": [ "indexing" ]
