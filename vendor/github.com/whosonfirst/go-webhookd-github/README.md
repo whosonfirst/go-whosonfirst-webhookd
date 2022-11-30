@@ -60,6 +60,10 @@ githubcommits://?exclude_additions={EXCLUDE_ADDITIONS}&exclude_modification={EXC
 | exclude_additions| boolean | A flag to indicate that new additions in a commit should be ignored. | no |
 | exclude_modifications| boolean | A flag to indicate that modifications in a commit should be ignored. | no |
 | exclude_deletions | boolean | A flag to indicate that deletions in a commit should be ignored. | no |
+| prepend_message | boolean | An optional boolean value to prepend the commit message to the final output. This takes the form of '#message,{COMMIT_MESSAGE},' | no |
+| prepend_author | boolean | An optional boolean value to prepend the name of the commit author to the final output. This takes the form of '#author,{COMMIT_AUTHOR},' | no |
+| halt_on_message | string | An optional regular expression that will be compared to the commit message; if it matches the transformer will return an error with code `webhookd.HaltEvent` | no | 
+| halt_on_author | string | An optional regular expression that will be compared to the commit author; if it matches the transformer will return an error with code `webhookd.HaltEvent` | no |
 
 ### GitHubRepo
 
@@ -76,6 +80,10 @@ githubrepo://?exclude_additions={EXCLUDE_ADDITIONS}&exclude_modification={EXCLUD
 | exclude_additions| boolean | A flag to indicate that new additions in a commit should be ignored. | no |
 | exclude_modifications| boolean | A flag to indicate that modifications in a commit should be ignored. | no |
 | exclude_deletions | boolean | A flag to indicate that deletions in a commit should be ignored. | no |
+| prepend_message | boolean | An optional boolean value to prepend the commit message to the final output. This takes the form of '#message,{COMMIT_MESSAGE},' | no |
+| prepend_author | boolean | An optional boolean value to prepend the name of the commit author to the final output. This takes the form of '#author,{COMMIT_AUTHOR},' | no |
+| halt_on_message | string | An optional regular expression that will be compared to the commit message; if it matches the transformer will return an error with code `webhookd.HaltEvent` | no | 
+| halt_on_author | string | An optional regular expression that will be compared to the commit author; if it matches the transformer will return an error with code `webhookd.HaltEvent` | no |
 
 ## See also
 
