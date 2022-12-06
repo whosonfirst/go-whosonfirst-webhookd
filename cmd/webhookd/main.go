@@ -7,6 +7,8 @@ import (
 	_ "github.com/aaronland/gocloud-blob-s3"
 	// necessary for blob dispatcher
 	_ "gocloud.dev/blob/fileblob"
+	// necessary for pubsub dispatcher
+	_ "gocloud.dev/pubsub/awssnssqs"
 )
 
 import (
