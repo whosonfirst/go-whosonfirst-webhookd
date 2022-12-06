@@ -17,7 +17,8 @@
 	"null": "null://",
 	"log": "log://",
 	"indexing" : "lambda://FunctionName?dsn=credentials=session%20region=us-east-1",
-	"indexing-halt" : "lambda://FunctionName?dsn=credentials=session%20region=us-east-1&halt_on_message=SWIM"		
+	"indexing-halt" : "lambda://FunctionName?dsn=credentials=session%20region=us-east-1&halt_on_message=SWIM",
+	"sqs": "awssqs://sqs.{REGION}.amazonaws.com/{ACCOUNT}/{QUEUE}?region={REGION}"
     },
     "webhooks": [
 	{
