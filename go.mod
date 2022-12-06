@@ -12,7 +12,7 @@ require (
 	github.com/sfomuseum/runtimevar v1.0.3
 	github.com/whosonfirst/go-webhookd-aws/v2 v2.4.0
 	github.com/whosonfirst/go-webhookd-github v1.2.0
-	github.com/whosonfirst/go-webhookd-gocloud v1.0.1
+	github.com/whosonfirst/go-webhookd-gocloud v1.1.0
 	github.com/whosonfirst/go-webhookd/v3 v3.2.0
 	gocloud.dev v0.27.0
 )
@@ -39,6 +39,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.2 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sns v1.17.10 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sqs v1.19.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.27.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.13 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.10 // indirect
@@ -54,6 +56,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect

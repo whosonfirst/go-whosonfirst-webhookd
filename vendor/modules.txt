@@ -88,6 +88,8 @@ github.com/aws/aws-sdk-go/service/lambda
 github.com/aws/aws-sdk-go/service/s3
 github.com/aws/aws-sdk-go/service/s3/s3iface
 github.com/aws/aws-sdk-go/service/s3/s3manager
+github.com/aws/aws-sdk-go/service/sns
+github.com/aws/aws-sdk-go/service/sqs
 github.com/aws/aws-sdk-go/service/ssm
 github.com/aws/aws-sdk-go/service/sso
 github.com/aws/aws-sdk-go/service/sso/ssoiface
@@ -173,6 +175,16 @@ github.com/aws/aws-sdk-go-v2/service/s3/internal/arn
 github.com/aws/aws-sdk-go-v2/service/s3/internal/customizations
 github.com/aws/aws-sdk-go-v2/service/s3/internal/endpoints
 github.com/aws/aws-sdk-go-v2/service/s3/types
+# github.com/aws/aws-sdk-go-v2/service/sns v1.17.10
+## explicit; go 1.15
+github.com/aws/aws-sdk-go-v2/service/sns
+github.com/aws/aws-sdk-go-v2/service/sns/internal/endpoints
+github.com/aws/aws-sdk-go-v2/service/sns/types
+# github.com/aws/aws-sdk-go-v2/service/sqs v1.19.1
+## explicit; go 1.15
+github.com/aws/aws-sdk-go-v2/service/sqs
+github.com/aws/aws-sdk-go-v2/service/sqs/internal/endpoints
+github.com/aws/aws-sdk-go-v2/service/sqs/types
 # github.com/aws/aws-sdk-go-v2/service/ssm v1.27.6
 ## explicit; go 1.15
 github.com/aws/aws-sdk-go-v2/service/ssm
@@ -251,7 +263,7 @@ github.com/whosonfirst/go-webhookd-aws/v2
 # github.com/whosonfirst/go-webhookd-github v1.2.0
 ## explicit; go 1.18
 github.com/whosonfirst/go-webhookd-github
-# github.com/whosonfirst/go-webhookd-gocloud v1.0.1
+# github.com/whosonfirst/go-webhookd-gocloud v1.1.0
 ## explicit; go 1.18
 github.com/whosonfirst/go-webhookd-gocloud
 # github.com/whosonfirst/go-webhookd/v3 v3.2.0
@@ -293,6 +305,10 @@ gocloud.dev/internal/gcerr
 gocloud.dev/internal/oc
 gocloud.dev/internal/openurl
 gocloud.dev/internal/retry
+gocloud.dev/pubsub
+gocloud.dev/pubsub/awssnssqs
+gocloud.dev/pubsub/batcher
+gocloud.dev/pubsub/driver
 gocloud.dev/runtimevar
 gocloud.dev/runtimevar/awsparamstore
 gocloud.dev/runtimevar/constantvar
@@ -317,6 +333,9 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
+# golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
+## explicit
+golang.org/x/sync/errgroup
 # golang.org/x/sys v0.1.0
 ## explicit; go 1.17
 golang.org/x/sys/unix
