@@ -284,7 +284,7 @@ func (c *Lambda) CreateAliasRequest(input *CreateAliasInput) (req *request.Reque
 
 // CreateAlias API operation for AWS Lambda.
 //
-// Creates an alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
+// Creates an alias (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html)
 // for a Lambda function version. Use aliases to provide clients with a function
 // identifier that you can update to invoke a different version.
 //
@@ -487,21 +487,21 @@ func (c *Lambda) CreateEventSourceMappingRequest(input *CreateEventSourceMapping
 // The following error handling options are available only for stream sources
 // (DynamoDB and Kinesis):
 //
-//   - BisectBatchOnFunctionError - If the function returns an error, split
+//   - BisectBatchOnFunctionError – If the function returns an error, split
 //     the batch in two and retry.
 //
-//   - DestinationConfig - Send discarded records to an Amazon SQS queue or
-//     Amazon SNS topic.
+//   - DestinationConfig – Send discarded records to an Amazon SQS queue
+//     or Amazon SNS topic.
 //
-//   - MaximumRecordAgeInSeconds - Discard records older than the specified
+//   - MaximumRecordAgeInSeconds – Discard records older than the specified
 //     age. The default value is infinite (-1). When set to infinite (-1), failed
 //     records are retried until the record expires
 //
-//   - MaximumRetryAttempts - Discard records after the specified number of
-//     retries. The default value is infinite (-1). When set to infinite (-1),
+//   - MaximumRetryAttempts – Discard records after the specified number
+//     of retries. The default value is infinite (-1). When set to infinite (-1),
 //     failed records are retried until the record expires.
 //
-//   - ParallelizationFactor - Process multiple batches from each shard concurrently.
+//   - ParallelizationFactor – Process multiple batches from each shard concurrently.
 //
 // For information about which configuration parameters apply to each event
 // source, see the following topics.
@@ -868,7 +868,7 @@ func (c *Lambda) DeleteAliasRequest(input *DeleteAliasInput) (req *request.Reque
 
 // DeleteAlias API operation for AWS Lambda.
 //
-// Deletes a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+// Deletes a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1883,7 +1883,7 @@ func (c *Lambda) GetAliasRequest(input *GetAliasInput) (req *request.Request, ou
 
 // GetAlias API operation for AWS Lambda.
 //
-// Returns details about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+// Returns details about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -3102,6 +3102,99 @@ func (c *Lambda) GetProvisionedConcurrencyConfigWithContext(ctx aws.Context, inp
 	return out, req.Send()
 }
 
+const opGetRuntimeManagementConfig = "GetRuntimeManagementConfig"
+
+// GetRuntimeManagementConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetRuntimeManagementConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetRuntimeManagementConfig for more information on using the GetRuntimeManagementConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//	// Example sending a request using the GetRuntimeManagementConfigRequest method.
+//	req, resp := client.GetRuntimeManagementConfigRequest(params)
+//
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetRuntimeManagementConfig
+func (c *Lambda) GetRuntimeManagementConfigRequest(input *GetRuntimeManagementConfigInput) (req *request.Request, output *GetRuntimeManagementConfigOutput) {
+	op := &request.Operation{
+		Name:       opGetRuntimeManagementConfig,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2021-07-20/functions/{FunctionName}/runtime-management-config",
+	}
+
+	if input == nil {
+		input = &GetRuntimeManagementConfigInput{}
+	}
+
+	output = &GetRuntimeManagementConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetRuntimeManagementConfig API operation for AWS Lambda.
+//
+// Retrieves the runtime management configuration for a function's version.
+// If the runtime update mode is Manual, this includes the ARN of the runtime
+// version and the runtime update mode. If the runtime update mode is Auto or
+// Function update, this includes the runtime update mode and null is returned
+// for the ARN. For more information, see Runtime updates (https://docs.aws.amazon.com/lambda/latest/dg/runtimes-update.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation GetRuntimeManagementConfig for usage and error information.
+//
+// Returned Error Types:
+//
+//   - ServiceException
+//     The Lambda service encountered an internal error.
+//
+//   - ResourceNotFoundException
+//     The resource specified in the request does not exist.
+//
+//   - InvalidParameterValueException
+//     One of the parameters in the request is not valid.
+//
+//   - TooManyRequestsException
+//     The request throughput limit was exceeded. For more information, see Lambda
+//     quotas (https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html#api-requests).
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/GetRuntimeManagementConfig
+func (c *Lambda) GetRuntimeManagementConfig(input *GetRuntimeManagementConfigInput) (*GetRuntimeManagementConfigOutput, error) {
+	req, out := c.GetRuntimeManagementConfigRequest(input)
+	return out, req.Send()
+}
+
+// GetRuntimeManagementConfigWithContext is the same as GetRuntimeManagementConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetRuntimeManagementConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Lambda) GetRuntimeManagementConfigWithContext(ctx aws.Context, input *GetRuntimeManagementConfigInput, opts ...request.Option) (*GetRuntimeManagementConfigOutput, error) {
+	req, out := c.GetRuntimeManagementConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opInvoke = "Invoke"
 
 // InvokeRequest generates a "aws/request.Request" representing the
@@ -3246,11 +3339,11 @@ func (c *Lambda) InvokeRequest(input *InvokeInput) (req *request.Request, output
 //     An error occurred when reading from or writing to a connected file system.
 //
 //   - SnapStartException
-//     The runtime restore hook encountered an error. For more information, check
-//     the Amazon CloudWatch logs.
+//     The afterRestore() runtime hook (https://docs.aws.amazon.com/lambda/latest/dg/snapstart-runtime-hooks.html)
+//     encountered an error. For more information, check the Amazon CloudWatch logs.
 //
 //   - SnapStartTimeoutException
-//     The runtime restore hook failed to complete within the timeout limit (2 seconds).
+//     Lambda couldn't restore the snapshot within the timeout limit.
 //
 //   - SnapStartNotReadyException
 //     Lambda is initializing your function. You can invoke the function when the
@@ -3473,7 +3566,7 @@ func (c *Lambda) ListAliasesRequest(input *ListAliasesInput) (req *request.Reque
 
 // ListAliases API operation for AWS Lambda.
 //
-// Returns a list of aliases (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html)
+// Returns a list of aliases (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html)
 // for a Lambda function.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -4210,8 +4303,8 @@ func (c *Lambda) ListFunctionsRequest(input *ListFunctionsInput) (req *request.R
 //
 // The ListFunctions operation returns a subset of the FunctionConfiguration
 // fields. To get the additional fields (State, StateReasonCode, StateReason,
-// LastUpdateStatus, LastUpdateStatusReason, LastUpdateStatusReasonCode) for
-// a function or version, use GetFunction.
+// LastUpdateStatus, LastUpdateStatusReason, LastUpdateStatusReasonCode, RuntimeVersionConfig)
+// for a function or version, use GetFunction.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -5741,6 +5834,99 @@ func (c *Lambda) PutProvisionedConcurrencyConfigWithContext(ctx aws.Context, inp
 	return out, req.Send()
 }
 
+const opPutRuntimeManagementConfig = "PutRuntimeManagementConfig"
+
+// PutRuntimeManagementConfigRequest generates a "aws/request.Request" representing the
+// client's request for the PutRuntimeManagementConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PutRuntimeManagementConfig for more information on using the PutRuntimeManagementConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//	// Example sending a request using the PutRuntimeManagementConfigRequest method.
+//	req, resp := client.PutRuntimeManagementConfigRequest(params)
+//
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/PutRuntimeManagementConfig
+func (c *Lambda) PutRuntimeManagementConfigRequest(input *PutRuntimeManagementConfigInput) (req *request.Request, output *PutRuntimeManagementConfigOutput) {
+	op := &request.Operation{
+		Name:       opPutRuntimeManagementConfig,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2021-07-20/functions/{FunctionName}/runtime-management-config",
+	}
+
+	if input == nil {
+		input = &PutRuntimeManagementConfigInput{}
+	}
+
+	output = &PutRuntimeManagementConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// PutRuntimeManagementConfig API operation for AWS Lambda.
+//
+// Sets the runtime management configuration for a function's version. For more
+// information, see Runtime updates (https://docs.aws.amazon.com/lambda/latest/dg/runtimes-update.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Lambda's
+// API operation PutRuntimeManagementConfig for usage and error information.
+//
+// Returned Error Types:
+//
+//   - ServiceException
+//     The Lambda service encountered an internal error.
+//
+//   - ResourceNotFoundException
+//     The resource specified in the request does not exist.
+//
+//   - ResourceConflictException
+//     The resource already exists, or another operation is in progress.
+//
+//   - InvalidParameterValueException
+//     One of the parameters in the request is not valid.
+//
+//   - TooManyRequestsException
+//     The request throughput limit was exceeded. For more information, see Lambda
+//     quotas (https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html#api-requests).
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/lambda-2015-03-31/PutRuntimeManagementConfig
+func (c *Lambda) PutRuntimeManagementConfig(input *PutRuntimeManagementConfigInput) (*PutRuntimeManagementConfigOutput, error) {
+	req, out := c.PutRuntimeManagementConfigRequest(input)
+	return out, req.Send()
+}
+
+// PutRuntimeManagementConfigWithContext is the same as PutRuntimeManagementConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PutRuntimeManagementConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Lambda) PutRuntimeManagementConfigWithContext(ctx aws.Context, input *PutRuntimeManagementConfigInput, opts ...request.Option) (*PutRuntimeManagementConfigOutput, error) {
+	req, out := c.PutRuntimeManagementConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opRemoveLayerVersionPermission = "RemoveLayerVersionPermission"
 
 // RemoveLayerVersionPermissionRequest generates a "aws/request.Request" representing the
@@ -6166,7 +6352,7 @@ func (c *Lambda) UpdateAliasRequest(input *UpdateAliasInput) (req *request.Reque
 
 // UpdateAlias API operation for AWS Lambda.
 //
-// Updates the configuration of a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+// Updates the configuration of a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -6370,21 +6556,21 @@ func (c *Lambda) UpdateEventSourceMappingRequest(input *UpdateEventSourceMapping
 // The following error handling options are available only for stream sources
 // (DynamoDB and Kinesis):
 //
-//   - BisectBatchOnFunctionError - If the function returns an error, split
+//   - BisectBatchOnFunctionError – If the function returns an error, split
 //     the batch in two and retry.
 //
-//   - DestinationConfig - Send discarded records to an Amazon SQS queue or
-//     Amazon SNS topic.
+//   - DestinationConfig – Send discarded records to an Amazon SQS queue
+//     or Amazon SNS topic.
 //
-//   - MaximumRecordAgeInSeconds - Discard records older than the specified
+//   - MaximumRecordAgeInSeconds – Discard records older than the specified
 //     age. The default value is infinite (-1). When set to infinite (-1), failed
 //     records are retried until the record expires
 //
-//   - MaximumRetryAttempts - Discard records after the specified number of
-//     retries. The default value is infinite (-1). When set to infinite (-1),
+//   - MaximumRetryAttempts – Discard records after the specified number
+//     of retries. The default value is infinite (-1). When set to infinite (-1),
 //     failed records are retried until the record expires.
 //
-//   - ParallelizationFactor - Process multiple batches from each shard concurrently.
+//   - ParallelizationFactor – Process multiple batches from each shard concurrently.
 //
 // For information about which configuration parameters apply to each event
 // source, see the following topics.
@@ -7411,7 +7597,7 @@ func (s *AddPermissionOutput) SetStatement(v string) *AddPermissionOutput {
 	return s
 }
 
-// Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/versioning-aliases.html).
+// Provides configuration information about a Lambda function alias (https://docs.aws.amazon.com/lambda/latest/dg/configuration-aliases.html).
 type AliasConfiguration struct {
 	_ struct{} `type:"structure"`
 
@@ -8270,18 +8456,18 @@ type CreateEventSourceMappingInput struct {
 	// the batch to the function in a single call, up to the payload limit for synchronous
 	// invocation (6 MB).
 	//
-	//    * Amazon Kinesis - Default 100. Max 10,000.
+	//    * Amazon Kinesis – Default 100. Max 10,000.
 	//
-	//    * Amazon DynamoDB Streams - Default 100. Max 10,000.
+	//    * Amazon DynamoDB Streams – Default 100. Max 10,000.
 	//
-	//    * Amazon Simple Queue Service - Default 10. For standard queues the max
-	//    is 10,000. For FIFO queues the max is 10.
+	//    * Amazon Simple Queue Service – Default 10. For standard queues the
+	//    max is 10,000. For FIFO queues the max is 10.
 	//
-	//    * Amazon Managed Streaming for Apache Kafka - Default 100. Max 10,000.
+	//    * Amazon Managed Streaming for Apache Kafka – Default 100. Max 10,000.
 	//
-	//    * Self-managed Apache Kafka - Default 100. Max 10,000.
+	//    * Self-managed Apache Kafka – Default 100. Max 10,000.
 	//
-	//    * Amazon MQ (ActiveMQ and RabbitMQ) - Default 100. Max 10,000.
+	//    * Amazon MQ (ActiveMQ and RabbitMQ) – Default 100. Max 10,000.
 	BatchSize *int64 `min:"1" type:"integer"`
 
 	// (Streams only) If the function returns an error, split the batch in two and
@@ -8300,15 +8486,15 @@ type CreateEventSourceMappingInput struct {
 
 	// The Amazon Resource Name (ARN) of the event source.
 	//
-	//    * Amazon Kinesis - The ARN of the data stream or a stream consumer.
+	//    * Amazon Kinesis – The ARN of the data stream or a stream consumer.
 	//
-	//    * Amazon DynamoDB Streams - The ARN of the stream.
+	//    * Amazon DynamoDB Streams – The ARN of the stream.
 	//
-	//    * Amazon Simple Queue Service - The ARN of the queue.
+	//    * Amazon Simple Queue Service – The ARN of the queue.
 	//
-	//    * Amazon Managed Streaming for Apache Kafka - The ARN of the cluster.
+	//    * Amazon Managed Streaming for Apache Kafka – The ARN of the cluster.
 	//
-	//    * Amazon MQ - The ARN of the broker.
+	//    * Amazon MQ – The ARN of the broker.
 	EventSourceArn *string `type:"string"`
 
 	// An object that defines the filter criteria that determine whether Lambda
@@ -8320,13 +8506,13 @@ type CreateEventSourceMappingInput struct {
 	//
 	// Name formats
 	//
-	//    * Function name - MyFunction.
+	//    * Function name – MyFunction.
 	//
-	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:MyFunction.
+	//    * Function ARN – arn:aws:lambda:us-west-2:123456789012:function:MyFunction.
 	//
-	//    * Version or Alias ARN - arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD.
+	//    * Version or Alias ARN – arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD.
 	//
-	//    * Partial ARN - 123456789012:function:MyFunction.
+	//    * Partial ARN – 123456789012:function:MyFunction.
 	//
 	// The length constraint applies only to the full ARN. If you specify only the
 	// function name, it's limited to 64 characters in length.
@@ -8369,6 +8555,11 @@ type CreateEventSourceMappingInput struct {
 
 	// (MQ) The name of the Amazon MQ broker destination queue to consume.
 	Queues []*string `min:"1" type:"list"`
+
+	// (Amazon SQS only) The scaling configuration for the event source. For more
+	// information, see Configuring maximum concurrency for Amazon SQS event sources
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency).
+	ScalingConfig *ScalingConfig `type:"structure"`
 
 	// The self-managed Apache Kafka cluster to receive records from.
 	SelfManagedEventSource *SelfManagedEventSource `type:"structure"`
@@ -8444,6 +8635,11 @@ func (s *CreateEventSourceMappingInput) Validate() error {
 	if s.AmazonManagedKafkaEventSourceConfig != nil {
 		if err := s.AmazonManagedKafkaEventSourceConfig.Validate(); err != nil {
 			invalidParams.AddNested("AmazonManagedKafkaEventSourceConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ScalingConfig != nil {
+		if err := s.ScalingConfig.Validate(); err != nil {
+			invalidParams.AddNested("ScalingConfig", err.(request.ErrInvalidParams))
 		}
 	}
 	if s.SelfManagedEventSource != nil {
@@ -8554,6 +8750,12 @@ func (s *CreateEventSourceMappingInput) SetParallelizationFactor(v int64) *Creat
 // SetQueues sets the Queues field's value.
 func (s *CreateEventSourceMappingInput) SetQueues(v []*string) *CreateEventSourceMappingInput {
 	s.Queues = v
+	return s
+}
+
+// SetScalingConfig sets the ScalingConfig field's value.
+func (s *CreateEventSourceMappingInput) SetScalingConfig(v *ScalingConfig) *CreateEventSourceMappingInput {
+	s.ScalingConfig = v
 	return s
 }
 
@@ -10836,6 +11038,11 @@ type EventSourceMappingConfiguration struct {
 	// (Amazon MQ) The name of the Amazon MQ broker destination queue to consume.
 	Queues []*string `min:"1" type:"list"`
 
+	// (Amazon SQS only) The scaling configuration for the event source. For more
+	// information, see Configuring maximum concurrency for Amazon SQS event sources
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency).
+	ScalingConfig *ScalingConfig `type:"structure"`
+
 	// The self-managed Apache Kafka cluster for your event source.
 	SelfManagedEventSource *SelfManagedEventSource `type:"structure"`
 
@@ -10978,6 +11185,12 @@ func (s *EventSourceMappingConfiguration) SetParallelizationFactor(v int64) *Eve
 // SetQueues sets the Queues field's value.
 func (s *EventSourceMappingConfiguration) SetQueues(v []*string) *EventSourceMappingConfiguration {
 	s.Queues = v
+	return s
+}
+
+// SetScalingConfig sets the ScalingConfig field's value.
+func (s *EventSourceMappingConfiguration) SetScalingConfig(v *ScalingConfig) *EventSourceMappingConfiguration {
+	s.ScalingConfig = v
 	return s
 }
 
@@ -11411,6 +11624,9 @@ type FunctionConfiguration struct {
 	// The runtime environment for the Lambda function.
 	Runtime *string `type:"string" enum:"Runtime"`
 
+	// The ARN of the runtime and any errors that occured.
+	RuntimeVersionConfig *RuntimeVersionConfig `type:"structure"`
+
 	// The ARN of the signing job.
 	SigningJobArn *string `type:"string"`
 
@@ -11419,7 +11635,7 @@ type FunctionConfiguration struct {
 
 	// Set ApplyOn to PublishedVersions to create a snapshot of the initialized
 	// execution environment when you publish a function version. For more information,
-	// see Reducing startup time with Lambda SnapStart (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
+	// see Improving startup performance with Lambda SnapStart (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
 	SnapStart *SnapStartResponse `type:"structure"`
 
 	// The current state of the function. When the state is Inactive, you can reactivate
@@ -11606,6 +11822,12 @@ func (s *FunctionConfiguration) SetRole(v string) *FunctionConfiguration {
 // SetRuntime sets the Runtime field's value.
 func (s *FunctionConfiguration) SetRuntime(v string) *FunctionConfiguration {
 	s.Runtime = &v
+	return s
+}
+
+// SetRuntimeVersionConfig sets the RuntimeVersionConfig field's value.
+func (s *FunctionConfiguration) SetRuntimeVersionConfig(v *RuntimeVersionConfig) *FunctionConfiguration {
+	s.RuntimeVersionConfig = v
 	return s
 }
 
@@ -13528,6 +13750,121 @@ func (s *GetProvisionedConcurrencyConfigOutput) SetStatusReason(v string) *GetPr
 	return s
 }
 
+type GetRuntimeManagementConfigInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name – my-function.
+	//
+	//    * Function ARN – arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN – 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
+	// FunctionName is a required field
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Specify a version of the function. This can be $LATEST or a published version
+	// number. If no value is specified, the configuration for the $LATEST version
+	// is returned.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRuntimeManagementConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRuntimeManagementConfigInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetRuntimeManagementConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetRuntimeManagementConfigInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFunctionName sets the FunctionName field's value.
+func (s *GetRuntimeManagementConfigInput) SetFunctionName(v string) *GetRuntimeManagementConfigInput {
+	s.FunctionName = &v
+	return s
+}
+
+// SetQualifier sets the Qualifier field's value.
+func (s *GetRuntimeManagementConfigInput) SetQualifier(v string) *GetRuntimeManagementConfigInput {
+	s.Qualifier = &v
+	return s
+}
+
+type GetRuntimeManagementConfigOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the runtime the function is configured to use. If the runtime
+	// update mode is Manual, the ARN is returned, otherwise null is returned.
+	RuntimeVersionArn *string `min:"26" type:"string"`
+
+	// The current runtime update mode of the function.
+	UpdateRuntimeOn *string `type:"string" enum:"UpdateRuntimeOn"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRuntimeManagementConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRuntimeManagementConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetRuntimeVersionArn sets the RuntimeVersionArn field's value.
+func (s *GetRuntimeManagementConfigOutput) SetRuntimeVersionArn(v string) *GetRuntimeManagementConfigOutput {
+	s.RuntimeVersionArn = &v
+	return s
+}
+
+// SetUpdateRuntimeOn sets the UpdateRuntimeOn field's value.
+func (s *GetRuntimeManagementConfigOutput) SetUpdateRuntimeOn(v string) *GetRuntimeManagementConfigOutput {
+	s.UpdateRuntimeOn = &v
+	return s
+}
+
 // Configuration values that override the container image Dockerfile settings.
 // For more information, see Container image settings (https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#images-parms).
 type ImageConfig struct {
@@ -15300,28 +15637,28 @@ type ListEventSourceMappingsInput struct {
 
 	// The Amazon Resource Name (ARN) of the event source.
 	//
-	//    * Amazon Kinesis - The ARN of the data stream or a stream consumer.
+	//    * Amazon Kinesis – The ARN of the data stream or a stream consumer.
 	//
-	//    * Amazon DynamoDB Streams - The ARN of the stream.
+	//    * Amazon DynamoDB Streams – The ARN of the stream.
 	//
-	//    * Amazon Simple Queue Service - The ARN of the queue.
+	//    * Amazon Simple Queue Service – The ARN of the queue.
 	//
-	//    * Amazon Managed Streaming for Apache Kafka - The ARN of the cluster.
+	//    * Amazon Managed Streaming for Apache Kafka – The ARN of the cluster.
 	//
-	//    * Amazon MQ - The ARN of the broker.
+	//    * Amazon MQ – The ARN of the broker.
 	EventSourceArn *string `location:"querystring" locationName:"EventSourceArn" type:"string"`
 
 	// The name of the Lambda function.
 	//
 	// Name formats
 	//
-	//    * Function name - MyFunction.
+	//    * Function name – MyFunction.
 	//
-	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:MyFunction.
+	//    * Function ARN – arn:aws:lambda:us-west-2:123456789012:function:MyFunction.
 	//
-	//    * Version or Alias ARN - arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD.
+	//    * Version or Alias ARN – arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD.
 	//
-	//    * Partial ARN - 123456789012:function:MyFunction.
+	//    * Partial ARN – 123456789012:function:MyFunction.
 	//
 	// The length constraint applies only to the full ARN. If you specify only the
 	// function name, it's limited to 64 characters in length.
@@ -17744,6 +18081,181 @@ func (s *PutProvisionedConcurrencyConfigOutput) SetStatusReason(v string) *PutPr
 	return s
 }
 
+type PutRuntimeManagementConfigInput struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the Lambda function.
+	//
+	// Name formats
+	//
+	//    * Function name – my-function.
+	//
+	//    * Function ARN – arn:aws:lambda:us-west-2:123456789012:function:my-function.
+	//
+	//    * Partial ARN – 123456789012:function:my-function.
+	//
+	// The length constraint applies only to the full ARN. If you specify only the
+	// function name, it is limited to 64 characters in length.
+	//
+	// FunctionName is a required field
+	FunctionName *string `location:"uri" locationName:"FunctionName" min:"1" type:"string" required:"true"`
+
+	// Specify a version of the function. This can be $LATEST or a published version
+	// number. If no value is specified, the configuration for the $LATEST version
+	// is returned.
+	Qualifier *string `location:"querystring" locationName:"Qualifier" min:"1" type:"string"`
+
+	// The ARN of the runtime version you want the function to use.
+	//
+	// This is only required if you're using the Manual runtime update mode.
+	RuntimeVersionArn *string `min:"26" type:"string"`
+
+	// Specify the runtime update mode.
+	//
+	//    * Auto (default) - Automatically update to the most recent and secure
+	//    runtime version using a Two-phase runtime version rollout (https://docs.aws.amazon.com/lambda/latest/dg/runtimes-update.html#runtime-management-two-phase).
+	//    This is the best choice for most customers to ensure they always benefit
+	//    from runtime updates.
+	//
+	//    * Function update - Lambda updates the runtime of your function to the
+	//    most recent and secure runtime version when you update your function.
+	//    This approach synchronizes runtime updates with function deployments,
+	//    giving you control over when runtime updates are applied and allowing
+	//    you to detect and mitigate rare runtime update incompatibilities early.
+	//    When using this setting, you need to regularly update your functions to
+	//    keep their runtime up-to-date.
+	//
+	//    * Manual - You specify a runtime version in your function configuration.
+	//    The function will use this runtime version indefinitely. In the rare case
+	//    where a new runtime version is incompatible with an existing function,
+	//    this allows you to roll back your function to an earlier runtime version.
+	//    For more information, see Roll back a runtime version (https://docs.aws.amazon.com/lambda/latest/dg/runtimes-update.html#runtime-management-rollback).
+	//
+	// UpdateRuntimeOn is a required field
+	UpdateRuntimeOn *string `type:"string" required:"true" enum:"UpdateRuntimeOn"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutRuntimeManagementConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutRuntimeManagementConfigInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutRuntimeManagementConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutRuntimeManagementConfigInput"}
+	if s.FunctionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionName"))
+	}
+	if s.FunctionName != nil && len(*s.FunctionName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionName", 1))
+	}
+	if s.Qualifier != nil && len(*s.Qualifier) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Qualifier", 1))
+	}
+	if s.RuntimeVersionArn != nil && len(*s.RuntimeVersionArn) < 26 {
+		invalidParams.Add(request.NewErrParamMinLen("RuntimeVersionArn", 26))
+	}
+	if s.UpdateRuntimeOn == nil {
+		invalidParams.Add(request.NewErrParamRequired("UpdateRuntimeOn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFunctionName sets the FunctionName field's value.
+func (s *PutRuntimeManagementConfigInput) SetFunctionName(v string) *PutRuntimeManagementConfigInput {
+	s.FunctionName = &v
+	return s
+}
+
+// SetQualifier sets the Qualifier field's value.
+func (s *PutRuntimeManagementConfigInput) SetQualifier(v string) *PutRuntimeManagementConfigInput {
+	s.Qualifier = &v
+	return s
+}
+
+// SetRuntimeVersionArn sets the RuntimeVersionArn field's value.
+func (s *PutRuntimeManagementConfigInput) SetRuntimeVersionArn(v string) *PutRuntimeManagementConfigInput {
+	s.RuntimeVersionArn = &v
+	return s
+}
+
+// SetUpdateRuntimeOn sets the UpdateRuntimeOn field's value.
+func (s *PutRuntimeManagementConfigInput) SetUpdateRuntimeOn(v string) *PutRuntimeManagementConfigInput {
+	s.UpdateRuntimeOn = &v
+	return s
+}
+
+type PutRuntimeManagementConfigOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the function
+	//
+	// FunctionArn is a required field
+	FunctionArn *string `type:"string" required:"true"`
+
+	// The ARN of the runtime the function is configured to use. If the runtime
+	// update mode is manual, the ARN is returned, otherwise null is returned.
+	RuntimeVersionArn *string `min:"26" type:"string"`
+
+	// The runtime update mode.
+	//
+	// UpdateRuntimeOn is a required field
+	UpdateRuntimeOn *string `type:"string" required:"true" enum:"UpdateRuntimeOn"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutRuntimeManagementConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutRuntimeManagementConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetFunctionArn sets the FunctionArn field's value.
+func (s *PutRuntimeManagementConfigOutput) SetFunctionArn(v string) *PutRuntimeManagementConfigOutput {
+	s.FunctionArn = &v
+	return s
+}
+
+// SetRuntimeVersionArn sets the RuntimeVersionArn field's value.
+func (s *PutRuntimeManagementConfigOutput) SetRuntimeVersionArn(v string) *PutRuntimeManagementConfigOutput {
+	s.RuntimeVersionArn = &v
+	return s
+}
+
+// SetUpdateRuntimeOn sets the UpdateRuntimeOn field's value.
+func (s *PutRuntimeManagementConfigOutput) SetUpdateRuntimeOn(v string) *PutRuntimeManagementConfigOutput {
+	s.UpdateRuntimeOn = &v
+	return s
+}
+
 type RemoveLayerVersionPermissionInput struct {
 	_ struct{} `type:"structure" nopayload:"true"`
 
@@ -18318,6 +18830,141 @@ func (s *ResourceNotReadyException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// The ARN of the runtime and any errors that occured.
+type RuntimeVersionConfig struct {
+	_ struct{} `type:"structure"`
+
+	// Error response when Lambda is unable to retrieve the runtime version for
+	// a function.
+	Error *RuntimeVersionError `type:"structure"`
+
+	// The ARN of the runtime version you want the function to use.
+	RuntimeVersionArn *string `min:"26" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RuntimeVersionConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RuntimeVersionConfig) GoString() string {
+	return s.String()
+}
+
+// SetError sets the Error field's value.
+func (s *RuntimeVersionConfig) SetError(v *RuntimeVersionError) *RuntimeVersionConfig {
+	s.Error = v
+	return s
+}
+
+// SetRuntimeVersionArn sets the RuntimeVersionArn field's value.
+func (s *RuntimeVersionConfig) SetRuntimeVersionArn(v string) *RuntimeVersionConfig {
+	s.RuntimeVersionArn = &v
+	return s
+}
+
+// Any error returned when the runtime version information for the function
+// could not be retrieved.
+type RuntimeVersionError struct {
+	_ struct{} `type:"structure"`
+
+	// The error code.
+	ErrorCode *string `type:"string"`
+
+	// The error message.
+	//
+	// Message is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by RuntimeVersionError's
+	// String and GoString methods.
+	Message *string `type:"string" sensitive:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RuntimeVersionError) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RuntimeVersionError) GoString() string {
+	return s.String()
+}
+
+// SetErrorCode sets the ErrorCode field's value.
+func (s *RuntimeVersionError) SetErrorCode(v string) *RuntimeVersionError {
+	s.ErrorCode = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *RuntimeVersionError) SetMessage(v string) *RuntimeVersionError {
+	s.Message = &v
+	return s
+}
+
+// (Amazon SQS only) The scaling configuration for the event source. To remove
+// the configuration, pass an empty value.
+type ScalingConfig struct {
+	_ struct{} `type:"structure"`
+
+	// Limits the number of concurrent instances that the Amazon SQS event source
+	// can invoke.
+	MaximumConcurrency *int64 `min:"2" type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ScalingConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ScalingConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ScalingConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ScalingConfig"}
+	if s.MaximumConcurrency != nil && *s.MaximumConcurrency < 2 {
+		invalidParams.Add(request.NewErrParamMinValue("MaximumConcurrency", 2))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMaximumConcurrency sets the MaximumConcurrency field's value.
+func (s *ScalingConfig) SetMaximumConcurrency(v int64) *ScalingConfig {
+	s.MaximumConcurrency = &v
+	return s
+}
+
 // The self-managed Apache Kafka cluster for your event source.
 type SelfManagedEventSource struct {
 	_ struct{} `type:"structure"`
@@ -18478,10 +19125,12 @@ func (s *ServiceException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-// The function's SnapStart setting. Set ApplyOn to PublishedVersions to create
-// a snapshot of the initialized execution environment when you publish a function
-// version. For more information, see Reducing startup time with Lambda SnapStart
-// (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
+// The function's Lambda SnapStart setting. Set ApplyOn to PublishedVersions
+// to create a snapshot of the initialized execution environment when you publish
+// a function version.
+//
+// SnapStart is supported with the java11 runtime. For more information, see
+// Improving startup performance with Lambda SnapStart (https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html).
 type SnapStart struct {
 	_ struct{} `type:"structure"`
 
@@ -18514,8 +19163,8 @@ func (s *SnapStart) SetApplyOn(v string) *SnapStart {
 	return s
 }
 
-// The runtime restore hook encountered an error. For more information, check
-// the Amazon CloudWatch logs.
+// The afterRestore() runtime hook (https://docs.aws.amazon.com/lambda/latest/dg/snapstart-runtime-hooks.html)
+// encountered an error. For more information, check the Amazon CloudWatch logs.
 type SnapStartException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -18694,7 +19343,7 @@ func (s *SnapStartResponse) SetOptimizationStatus(v string) *SnapStartResponse {
 	return s
 }
 
-// The runtime restore hook failed to complete within the timeout limit (2 seconds).
+// Lambda couldn't restore the snapshot within the timeout limit.
 type SnapStartTimeoutException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -18768,39 +19417,39 @@ type SourceAccessConfiguration struct {
 	// The type of authentication protocol, VPC components, or virtual host for
 	// your event source. For example: "Type":"SASL_SCRAM_512_AUTH".
 	//
-	//    * BASIC_AUTH - (Amazon MQ) The Secrets Manager secret that stores your
+	//    * BASIC_AUTH – (Amazon MQ) The Secrets Manager secret that stores your
 	//    broker credentials.
 	//
-	//    * BASIC_AUTH - (Self-managed Apache Kafka) The Secrets Manager ARN of
+	//    * BASIC_AUTH – (Self-managed Apache Kafka) The Secrets Manager ARN of
 	//    your secret key used for SASL/PLAIN authentication of your Apache Kafka
 	//    brokers.
 	//
-	//    * VPC_SUBNET - (Self-managed Apache Kafka) The subnets associated with
+	//    * VPC_SUBNET – (Self-managed Apache Kafka) The subnets associated with
 	//    your VPC. Lambda connects to these subnets to fetch data from your self-managed
 	//    Apache Kafka cluster.
 	//
-	//    * VPC_SECURITY_GROUP - (Self-managed Apache Kafka) The VPC security group
-	//    used to manage access to your self-managed Apache Kafka brokers.
+	//    * VPC_SECURITY_GROUP – (Self-managed Apache Kafka) The VPC security
+	//    group used to manage access to your self-managed Apache Kafka brokers.
 	//
-	//    * SASL_SCRAM_256_AUTH - (Self-managed Apache Kafka) The Secrets Manager
+	//    * SASL_SCRAM_256_AUTH – (Self-managed Apache Kafka) The Secrets Manager
 	//    ARN of your secret key used for SASL SCRAM-256 authentication of your
 	//    self-managed Apache Kafka brokers.
 	//
-	//    * SASL_SCRAM_512_AUTH - (Amazon MSK, Self-managed Apache Kafka) The Secrets
-	//    Manager ARN of your secret key used for SASL SCRAM-512 authentication
+	//    * SASL_SCRAM_512_AUTH – (Amazon MSK, Self-managed Apache Kafka) The
+	//    Secrets Manager ARN of your secret key used for SASL SCRAM-512 authentication
 	//    of your self-managed Apache Kafka brokers.
 	//
-	//    * VIRTUAL_HOST - (RabbitMQ) The name of the virtual host in your RabbitMQ
+	//    * VIRTUAL_HOST –- (RabbitMQ) The name of the virtual host in your RabbitMQ
 	//    broker. Lambda uses this RabbitMQ host as the event source. This property
 	//    cannot be specified in an UpdateEventSourceMapping API call.
 	//
-	//    * CLIENT_CERTIFICATE_TLS_AUTH - (Amazon MSK, self-managed Apache Kafka)
+	//    * CLIENT_CERTIFICATE_TLS_AUTH – (Amazon MSK, self-managed Apache Kafka)
 	//    The Secrets Manager ARN of your secret key containing the certificate
 	//    chain (X.509 PEM), private key (PKCS#8 PEM), and private key password
 	//    (optional) used for mutual TLS authentication of your MSK/Apache Kafka
 	//    brokers.
 	//
-	//    * SERVER_ROOT_CA_CERTIFICATE - (Self-managed Apache Kafka) The Secrets
+	//    * SERVER_ROOT_CA_CERTIFICATE – (Self-managed Apache Kafka) The Secrets
 	//    Manager ARN of your secret key containing the root CA certificate (X.509
 	//    PEM) used for TLS encryption of your Apache Kafka brokers.
 	Type *string `type:"string" enum:"SourceAccessType"`
@@ -19534,18 +20183,18 @@ type UpdateEventSourceMappingInput struct {
 	// the batch to the function in a single call, up to the payload limit for synchronous
 	// invocation (6 MB).
 	//
-	//    * Amazon Kinesis - Default 100. Max 10,000.
+	//    * Amazon Kinesis – Default 100. Max 10,000.
 	//
-	//    * Amazon DynamoDB Streams - Default 100. Max 10,000.
+	//    * Amazon DynamoDB Streams – Default 100. Max 10,000.
 	//
-	//    * Amazon Simple Queue Service - Default 10. For standard queues the max
-	//    is 10,000. For FIFO queues the max is 10.
+	//    * Amazon Simple Queue Service – Default 10. For standard queues the
+	//    max is 10,000. For FIFO queues the max is 10.
 	//
-	//    * Amazon Managed Streaming for Apache Kafka - Default 100. Max 10,000.
+	//    * Amazon Managed Streaming for Apache Kafka – Default 100. Max 10,000.
 	//
-	//    * Self-managed Apache Kafka - Default 100. Max 10,000.
+	//    * Self-managed Apache Kafka – Default 100. Max 10,000.
 	//
-	//    * Amazon MQ (ActiveMQ and RabbitMQ) - Default 100. Max 10,000.
+	//    * Amazon MQ (ActiveMQ and RabbitMQ) – Default 100. Max 10,000.
 	BatchSize *int64 `min:"1" type:"integer"`
 
 	// (Streams only) If the function returns an error, split the batch in two and
@@ -19571,13 +20220,13 @@ type UpdateEventSourceMappingInput struct {
 	//
 	// Name formats
 	//
-	//    * Function name - MyFunction.
+	//    * Function name – MyFunction.
 	//
-	//    * Function ARN - arn:aws:lambda:us-west-2:123456789012:function:MyFunction.
+	//    * Function ARN – arn:aws:lambda:us-west-2:123456789012:function:MyFunction.
 	//
-	//    * Version or Alias ARN - arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD.
+	//    * Version or Alias ARN – arn:aws:lambda:us-west-2:123456789012:function:MyFunction:PROD.
 	//
-	//    * Partial ARN - 123456789012:function:MyFunction.
+	//    * Partial ARN – 123456789012:function:MyFunction.
 	//
 	// The length constraint applies only to the full ARN. If you specify only the
 	// function name, it's limited to 64 characters in length.
@@ -19615,6 +20264,11 @@ type UpdateEventSourceMappingInput struct {
 
 	// (Streams only) The number of batches to process from each shard concurrently.
 	ParallelizationFactor *int64 `min:"1" type:"integer"`
+
+	// (Amazon SQS only) The scaling configuration for the event source. For more
+	// information, see Configuring maximum concurrency for Amazon SQS event sources
+	// (https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html#events-sqs-max-concurrency).
+	ScalingConfig *ScalingConfig `type:"structure"`
 
 	// An array of authentication protocols or VPC components required to secure
 	// your event source.
@@ -19671,6 +20325,11 @@ func (s *UpdateEventSourceMappingInput) Validate() error {
 	}
 	if s.UUID != nil && len(*s.UUID) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("UUID", 1))
+	}
+	if s.ScalingConfig != nil {
+		if err := s.ScalingConfig.Validate(); err != nil {
+			invalidParams.AddNested("ScalingConfig", err.(request.ErrInvalidParams))
+		}
 	}
 	if s.SourceAccessConfigurations != nil {
 		for i, v := range s.SourceAccessConfigurations {
@@ -19752,6 +20411,12 @@ func (s *UpdateEventSourceMappingInput) SetMaximumRetryAttempts(v int64) *Update
 // SetParallelizationFactor sets the ParallelizationFactor field's value.
 func (s *UpdateEventSourceMappingInput) SetParallelizationFactor(v int64) *UpdateEventSourceMappingInput {
 	s.ParallelizationFactor = &v
+	return s
+}
+
+// SetScalingConfig sets the ScalingConfig field's value.
+func (s *UpdateEventSourceMappingInput) SetScalingConfig(v *ScalingConfig) *UpdateEventSourceMappingInput {
+	s.ScalingConfig = v
 	return s
 }
 
@@ -21325,5 +21990,25 @@ func TracingMode_Values() []string {
 	return []string{
 		TracingModeActive,
 		TracingModePassThrough,
+	}
+}
+
+const (
+	// UpdateRuntimeOnAuto is a UpdateRuntimeOn enum value
+	UpdateRuntimeOnAuto = "Auto"
+
+	// UpdateRuntimeOnManual is a UpdateRuntimeOn enum value
+	UpdateRuntimeOnManual = "Manual"
+
+	// UpdateRuntimeOnFunctionUpdate is a UpdateRuntimeOn enum value
+	UpdateRuntimeOnFunctionUpdate = "FunctionUpdate"
+)
+
+// UpdateRuntimeOn_Values returns all elements of the UpdateRuntimeOn enum
+func UpdateRuntimeOn_Values() []string {
+	return []string{
+		UpdateRuntimeOnAuto,
+		UpdateRuntimeOnManual,
+		UpdateRuntimeOnFunctionUpdate,
 	}
 }

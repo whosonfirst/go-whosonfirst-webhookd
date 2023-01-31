@@ -1,3 +1,60 @@
+# v1.18.6 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.18.5 (2022-11-16)
+
+* No change notes available for this release.
+
+# v1.18.4 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.18.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.18.0 (2022-09-14)
+
+* **Feature**: Amazon SNS introduces the Data Protection Policy APIs, which enable customers to attach a data protection policy to an SNS topic. This allows topic owners to enable the new message data protection feature to audit and block sensitive data that is exchanged through their topics.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.17 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.16 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.15 (2022-08-30)
+
+* No change notes available for this release.
+
+# v1.17.14 (2022-08-29)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.13 (2022-08-11)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.12 (2022-08-09)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.17.11 (2022-08-08)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.17.10 (2022-08-01)
 
 * **Dependency Update**: Updated to the latest SDK module versions

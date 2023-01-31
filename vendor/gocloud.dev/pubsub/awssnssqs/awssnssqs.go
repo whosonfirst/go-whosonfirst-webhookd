@@ -58,7 +58,7 @@
 //   - Topic: (V1) *sns.SNS for OpenSNSTopic, *sqs.SQS for OpenSQSTopic; (V2) *snsv2.Client for OpenSNSTopicV2, *sqsv2.Client for OpenSQSTopicV2
 //   - Subscription: (V1) *sqs.SQS; (V2) *sqsv2.Client
 //   - Message: (V1) *sqs.Message; (V2) sqstypesv2.Message
-//   - Message.BeforeSend: (V1) *sns.PublishInput for OpenSNSTopic, *sqs.SendMessageBatchRequestEntry or *sqs.SendMessageInput(deprecated) for OpenSQSTopic; (V2) *snsv2.PublishInput for OpenSNSTopicV2, sqstypesv2.SendMessageBatchRequestEntry for OpenSQSTopicV2
+//   - Message.BeforeSend: (V1) *sns.PublishInput for OpenSNSTopic, *sqs.SendMessageBatchRequestEntry or *sqs.SendMessageInput(deprecated) for OpenSQSTopic; (V2) *snsv2.PublishInput for OpenSNSTopicV2, *sqstypesv2.SendMessageBatchRequestEntry for OpenSQSTopicV2
 //   - Message.AfterSend: (V1) *sns.PublishOutput for OpenSNSTopic, *sqs.SendMessageBatchResultEntry for OpenSQSTopic; (V2) *snsv2.PublishOutput for OpenSNSTopicV2, sqstypesv2.SendMessageBatchResultEntry for OpenSQSTopicV2
 //   - Error: (V1) awserr.Error, (V2) any error type returned by the service, notably smithy.APIError
 package awssnssqs // import "gocloud.dev/pubsub/awssnssqs"
@@ -214,6 +214,8 @@ const SQSScheme = "awssqs"
 //
 //   - raw (for "awssqs" Subscriptions only): sets SubscriberOptions.Raw. The
 //     value must be parseable by `strconv.ParseBool`.
+//   - nacklazy (for "awssqs" Subscriptions only): sets SubscriberOptions.NackLazy. The
+//     value must be parseable by `strconv.ParseBool`.
 //   - waittime: sets SubscriberOptions.WaitTime, in time.ParseDuration formats.
 //
 // See gocloud.dev/aws/ConfigFromURLParams for other query parameters
@@ -283,6 +285,14 @@ func (o *URLOpener) OpenSubscriptionURL(ctx context.Context, u *url.URL) (*pubsu
 			return nil, fmt.Errorf("invalid value %q for raw: %v", rawStr, err)
 		}
 		q.Del("raw")
+	}
+	if nackLazyStr := q.Get("nacklazy"); nackLazyStr != "" {
+		var err error
+		opts.NackLazy, err = strconv.ParseBool(nackLazyStr)
+		if err != nil {
+			return nil, fmt.Errorf("invalid value %q for nacklazy: %v", nackLazyStr, err)
+		}
+		q.Del("nacklazy")
 	}
 	if waitTimeStr := q.Get("waittime"); waitTimeStr != "" {
 		var err error
@@ -370,6 +380,9 @@ func OpenTopic(ctx context.Context, sess client.ConfigProvider, topicARN string,
 // OpenSNSTopic opens a topic that sends to the SNS topic with the given Amazon
 // Resource Name (ARN).
 func OpenSNSTopic(ctx context.Context, sess client.ConfigProvider, topicARN string, opts *TopicOptions) *pubsub.Topic {
+	if opts == nil {
+		opts = &TopicOptions{}
+	}
 	bo := sendBatcherOptsSNS.NewMergedOptions(&opts.BatcherOptions)
 	return pubsub.NewTopic(openSNSTopic(ctx, sns.New(sess), topicARN, opts), bo)
 }
@@ -377,6 +390,9 @@ func OpenSNSTopic(ctx context.Context, sess client.ConfigProvider, topicARN stri
 // OpenSNSTopicV2 opens a topic that sends to the SNS topic with the given Amazon
 // Resource Name (ARN), using AWS SDK V2.
 func OpenSNSTopicV2(ctx context.Context, client *snsv2.Client, topicARN string, opts *TopicOptions) *pubsub.Topic {
+	if opts == nil {
+		opts = &TopicOptions{}
+	}
 	bo := sendBatcherOptsSNS.NewMergedOptions(&opts.BatcherOptions)
 	return pubsub.NewTopic(openSNSTopicV2(ctx, client, topicARN, opts), bo)
 }
@@ -384,9 +400,6 @@ func OpenSNSTopicV2(ctx context.Context, client *snsv2.Client, topicARN string, 
 // openSNSTopic returns the driver for OpenSNSTopic. This function exists so the test
 // harness can get the driver interface implementation if it needs to.
 func openSNSTopic(ctx context.Context, client *sns.SNS, topicARN string, opts *TopicOptions) driver.Topic {
-	if opts == nil {
-		opts = &TopicOptions{}
-	}
 	return &snsTopic{
 		useV2:  false,
 		client: client,
@@ -398,9 +411,6 @@ func openSNSTopic(ctx context.Context, client *sns.SNS, topicARN string, opts *T
 // openSNSTopicV2 returns the driver for OpenSNSTopic. This function exists so the test
 // harness can get the driver interface implementation if it needs to.
 func openSNSTopicV2(ctx context.Context, client *snsv2.Client, topicARN string, opts *TopicOptions) driver.Topic {
-	if opts == nil {
-		opts = &TopicOptions{}
-	}
 	return &snsTopic{
 		useV2:    true,
 		clientV2: client,
@@ -605,6 +615,9 @@ type sqsTopic struct {
 // OpenSQSTopic opens a topic that sends to the SQS topic with the given SQS
 // queue URL.
 func OpenSQSTopic(ctx context.Context, sess client.ConfigProvider, qURL string, opts *TopicOptions) *pubsub.Topic {
+	if opts == nil {
+		opts = &TopicOptions{}
+	}
 	bo := sendBatcherOptsSQS.NewMergedOptions(&opts.BatcherOptions)
 	return pubsub.NewTopic(openSQSTopic(ctx, sqs.New(sess), qURL, opts), bo)
 }
@@ -612,6 +625,9 @@ func OpenSQSTopic(ctx context.Context, sess client.ConfigProvider, qURL string, 
 // OpenSQSTopicV2 opens a topic that sends to the SQS topic with the given SQS
 // queue URL, using AWS SDK V2.
 func OpenSQSTopicV2(ctx context.Context, client *sqsv2.Client, qURL string, opts *TopicOptions) *pubsub.Topic {
+	if opts == nil {
+		opts = &TopicOptions{}
+	}
 	bo := sendBatcherOptsSQS.NewMergedOptions(&opts.BatcherOptions)
 	return pubsub.NewTopic(openSQSTopicV2(ctx, client, qURL, opts), bo)
 }
@@ -619,9 +635,6 @@ func OpenSQSTopicV2(ctx context.Context, client *sqsv2.Client, qURL string, opts
 // openSQSTopic returns the driver for OpenSQSTopic. This function exists so the test
 // harness can get the driver interface implementation if it needs to.
 func openSQSTopic(ctx context.Context, client *sqs.SQS, qURL string, opts *TopicOptions) driver.Topic {
-	if opts == nil {
-		opts = &TopicOptions{}
-	}
 	return &sqsTopic{
 		useV2:  false,
 		client: client,
@@ -633,9 +646,6 @@ func openSQSTopic(ctx context.Context, client *sqs.SQS, qURL string, opts *Topic
 // openSQSTopicV2 returns the driver for OpenSQSTopic. This function exists so the test
 // harness can get the driver interface implementation if it needs to.
 func openSQSTopicV2(ctx context.Context, client *sqsv2.Client, qURL string, opts *TopicOptions) driver.Topic {
-	if opts == nil {
-		opts = &TopicOptions{}
-	}
 	return &sqsTopic{
 		useV2:    true,
 		clientV2: client,
@@ -668,15 +678,14 @@ func (t *sqsTopic) SendBatch(ctx context.Context, dms []*driver.Message) error {
 			if len(attrs) == 0 {
 				attrs = nil
 			}
-			entry := sqstypesv2.SendMessageBatchRequestEntry{
+			entry := &sqstypesv2.SendMessageBatchRequestEntry{
 				Id:                aws.String(strconv.Itoa(len(req.Entries))),
 				MessageAttributes: attrs,
 				MessageBody:       aws.String(body),
 			}
-			req.Entries = append(req.Entries, entry)
 			if dm.BeforeSend != nil {
 				asFunc := func(i interface{}) bool {
-					if p, ok := i.(*sqstypesv2.SendMessageBatchRequestEntry); ok {
+					if p, ok := i.(**sqstypesv2.SendMessageBatchRequestEntry); ok {
 						*p = entry
 						return true
 					}
@@ -686,6 +695,7 @@ func (t *sqsTopic) SendBatch(ctx context.Context, dms []*driver.Message) error {
 					return err
 				}
 			}
+			req.Entries = append(req.Entries, *entry)
 		}
 		resp, err := t.clientV2.SendMessageBatch(ctx, req)
 		if err != nil {
@@ -918,6 +928,17 @@ type SubscriptionOptions struct {
 	// See https://aws.amazon.com/sns/faqs/#Raw_message_delivery.
 	Raw bool
 
+	// NackLazy determines what Nack does.
+	//
+	// By default, Nack uses ChangeMessageVisibility to set the VisibilityTimeout
+	// for the nacked message to 0, so that it will be redelivered immediately.
+	// Set NackLazy to true to bypass this behavior; Nack will do nothing,
+	// and the message will be redelivered after the existing VisibilityTimeout
+	// expires (defaults to 30s, but can be configured per queue).
+	//
+	// See https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html.
+	NackLazy bool
+
 	// WaitTime passed to ReceiveMessage to enable long polling.
 	// https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html#sqs-long-polling.
 	// Note that a non-zero WaitTime can delay delivery of messages
@@ -935,6 +956,9 @@ type SubscriptionOptions struct {
 // queue URL. The queue is assumed to be subscribed to some SNS topic, though
 // there is no check for this.
 func OpenSubscription(ctx context.Context, sess client.ConfigProvider, qURL string, opts *SubscriptionOptions) *pubsub.Subscription {
+	if opts == nil {
+		opts = &SubscriptionOptions{}
+	}
 	rbo := recvBatcherOpts.NewMergedOptions(&opts.ReceiveBatcherOptions)
 	abo := ackBatcherOpts.NewMergedOptions(&opts.AckBatcherOptions)
 	return pubsub.NewSubscription(openSubscription(ctx, sqs.New(sess), qURL, opts), rbo, abo)
@@ -944,6 +968,9 @@ func OpenSubscription(ctx context.Context, sess client.ConfigProvider, qURL stri
 // queue URL, using AWS SDK V2. The queue is assumed to be subscribed to some SNS topic, though
 // there is no check for this.
 func OpenSubscriptionV2(ctx context.Context, client *sqsv2.Client, qURL string, opts *SubscriptionOptions) *pubsub.Subscription {
+	if opts == nil {
+		opts = &SubscriptionOptions{}
+	}
 	rbo := recvBatcherOpts.NewMergedOptions(&opts.ReceiveBatcherOptions)
 	abo := ackBatcherOpts.NewMergedOptions(&opts.AckBatcherOptions)
 	return pubsub.NewSubscription(openSubscriptionV2(ctx, client, qURL, opts), rbo, abo)
@@ -951,9 +978,6 @@ func OpenSubscriptionV2(ctx context.Context, client *sqsv2.Client, qURL string, 
 
 // openSubscription returns a driver.Subscription.
 func openSubscription(ctx context.Context, client *sqs.SQS, qURL string, opts *SubscriptionOptions) driver.Subscription {
-	if opts == nil {
-		opts = &SubscriptionOptions{}
-	}
 	return &subscription{
 		useV2:  false,
 		client: client,
@@ -963,9 +987,6 @@ func openSubscription(ctx context.Context, client *sqs.SQS, qURL string, opts *S
 
 // openSubscriptionV2 returns a driver.Subscription.
 func openSubscriptionV2(ctx context.Context, client *sqsv2.Client, qURL string, opts *SubscriptionOptions) driver.Subscription {
-	if opts == nil {
-		opts = &SubscriptionOptions{}
-	}
 	return &subscription{
 		useV2:    true,
 		clientV2: client,
@@ -1199,6 +1220,9 @@ func (s *subscription) CanNack() bool { return true }
 
 // SendNacks implements driver.Subscription.SendNacks.
 func (s *subscription) SendNacks(ctx context.Context, ids []driver.AckID) error {
+	if s.opts.NackLazy {
+		return nil
+	}
 	if s.useV2 {
 		req := &sqsv2.ChangeMessageVisibilityBatchInput{QueueUrl: aws.String(s.qURL)}
 		for _, id := range ids {

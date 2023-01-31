@@ -2179,6 +2179,10 @@ func (c *ECS) ExecuteCommandRequest(input *ExecuteCommandInput) (req *request.Re
 // you receive an AccessDeniedException when there is a mismatch between the
 // condition key value and the corresponding parameter value.
 //
+// For information about required permissions and considerations, see Using
+// Amazon ECS Exec for debugging (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-exec.htm)
+// in the Amazon ECS Developer Guide.
+//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -7929,9 +7933,9 @@ type ClusterServiceConnectDefaultsRequest struct {
 
 	// The namespace name or full Amazon Resource Name (ARN) of the Cloud Map namespace
 	// that's used when you create a service and don't specify a Service Connect
-	// configuration. Up to 1024 characters are allowed. The name is case-sensitive.
-	// The characters can't include hyphens (-), tilde (~), greater than (>), less
-	// than (<), or slash (/).
+	// configuration. The namespace name can include up to 1024 characters. The
+	// name is case-sensitive. The name can't include hyphens (-), tilde (~), greater
+	// than (>), less than (<), or slash (/).
 	//
 	// If you enter an existing namespace name or ARN, then that namespace will
 	// be used. Any namespace type is supported. The namespace must be in this account
@@ -11777,6 +11781,96 @@ func (s *Deployment) SetUpdatedAt(v time.Time) *Deployment {
 	return s
 }
 
+// One of the methods which provide a way for you to quickly identify when a
+// deployment has failed, and then to optionally roll back the failure to the
+// last working deployment.
+//
+// When the alarms are generated, Amazon ECS sets the service deployment to
+// failed. Set the rollback parameter to have Amazon ECS to roll back your service
+// to the last completed deployment after a failure.
+//
+// You can only use the DeploymentAlarms method to detect failures when the
+// DeploymentController is set to ECS (rolling update).
+//
+// For more information, see Rolling update (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html)
+// in the Amazon Elastic Container Service Developer Guide .
+type DeploymentAlarms struct {
+	_ struct{} `type:"structure"`
+
+	// One or more CloudWatch alarm names. Use a "," to separate the alarms.
+	//
+	// AlarmNames is a required field
+	AlarmNames []*string `locationName:"alarmNames" type:"list" required:"true"`
+
+	// Determines whether to use the CloudWatch alarm option in the service deployment
+	// process.
+	//
+	// Enable is a required field
+	Enable *bool `locationName:"enable" type:"boolean" required:"true"`
+
+	// Determines whether to configure Amazon ECS to roll back the service if a
+	// service deployment fails. If rollback is used, when a service deployment
+	// fails, the service is rolled back to the last deployment that completed successfully.
+	//
+	// Rollback is a required field
+	Rollback *bool `locationName:"rollback" type:"boolean" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeploymentAlarms) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeploymentAlarms) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeploymentAlarms) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeploymentAlarms"}
+	if s.AlarmNames == nil {
+		invalidParams.Add(request.NewErrParamRequired("AlarmNames"))
+	}
+	if s.Enable == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enable"))
+	}
+	if s.Rollback == nil {
+		invalidParams.Add(request.NewErrParamRequired("Rollback"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAlarmNames sets the AlarmNames field's value.
+func (s *DeploymentAlarms) SetAlarmNames(v []*string) *DeploymentAlarms {
+	s.AlarmNames = v
+	return s
+}
+
+// SetEnable sets the Enable field's value.
+func (s *DeploymentAlarms) SetEnable(v bool) *DeploymentAlarms {
+	s.Enable = &v
+	return s
+}
+
+// SetRollback sets the Rollback field's value.
+func (s *DeploymentAlarms) SetRollback(v bool) *DeploymentAlarms {
+	s.Rollback = &v
+	return s
+}
+
 // The deployment circuit breaker can only be used for services using the rolling
 // update (ECS) deployment type that aren't behind a Classic Load Balancer.
 //
@@ -11795,8 +11889,8 @@ type DeploymentCircuitBreaker struct {
 	Enable *bool `locationName:"enable" type:"boolean" required:"true"`
 
 	// Determines whether to configure Amazon ECS to roll back the service if a
-	// service deployment fails. If rollback is enabled, when a service deployment
-	// fails, the service is rolled back to the last deployment that completed successfully.
+	// service deployment fails. If rollback is on, when a service deployment fails,
+	// the service is rolled back to the last deployment that completed successfully.
 	//
 	// Rollback is a required field
 	Rollback *bool `locationName:"rollback" type:"boolean" required:"true"`
@@ -11852,6 +11946,9 @@ func (s *DeploymentCircuitBreaker) SetRollback(v bool) *DeploymentCircuitBreaker
 // and the ordering of stopping and starting tasks.
 type DeploymentConfiguration struct {
 	_ struct{} `type:"structure"`
+
+	// Information about the CloudWatch alarms.
+	Alarms *DeploymentAlarms `locationName:"alarms" type:"structure"`
 
 	//
 	// The deployment circuit breaker can only be used for services using the rolling
@@ -11953,6 +12050,11 @@ func (s DeploymentConfiguration) GoString() string {
 // Validate inspects the fields of the type to determine if they are valid.
 func (s *DeploymentConfiguration) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "DeploymentConfiguration"}
+	if s.Alarms != nil {
+		if err := s.Alarms.Validate(); err != nil {
+			invalidParams.AddNested("Alarms", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.DeploymentCircuitBreaker != nil {
 		if err := s.DeploymentCircuitBreaker.Validate(); err != nil {
 			invalidParams.AddNested("DeploymentCircuitBreaker", err.(request.ErrInvalidParams))
@@ -11963,6 +12065,12 @@ func (s *DeploymentConfiguration) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetAlarms sets the Alarms field's value.
+func (s *DeploymentConfiguration) SetAlarms(v *DeploymentAlarms) *DeploymentConfiguration {
+	s.Alarms = v
+	return s
 }
 
 // SetDeploymentCircuitBreaker sets the DeploymentCircuitBreaker field's value.
@@ -17099,8 +17207,56 @@ type NetworkBinding struct {
 	// The port number on the container that's used with the network binding.
 	ContainerPort *int64 `locationName:"containerPort" type:"integer"`
 
+	// The port number range on the container that's bound to the dynamically mapped
+	// host port range.
+	//
+	// The following rules apply when you specify a containerPortRange:
+	//
+	//    * You must use either the bridge network mode or the awsvpc network mode.
+	//
+	//    * This parameter is available for both the EC2 and Fargate launch types.
+	//
+	//    * This parameter is available for both the Linux and Windows operating
+	//    systems.
+	//
+	//    * The container instance must have at least version 1.67.0 of the container
+	//    agent and at least version 1.67.0-1 of the ecs-init package
+	//
+	//    * You can specify a maximum of 100 port ranges per container.
+	//
+	//    * You do not specify a hostPortRange. The value of the hostPortRange is
+	//    set as follows: For containers in a task with the awsvpc network mode,
+	//    the hostPort is set to the same value as the containerPort. This is a
+	//    static mapping strategy. For containers in a task with the bridge network
+	//    mode, the Amazon ECS agent finds open host ports from the default ephemeral
+	//    range and passes it to docker to bind them to the container ports.
+	//
+	//    * The containerPortRange valid values are between 1 and 65535.
+	//
+	//    * A port can only be included in one port mapping per container.
+	//
+	//    * You cannot specify overlapping port ranges.
+	//
+	//    * The first port in the range must be less than last port in the range.
+	//
+	//    * Docker recommends that you turn off the docker-proxy in the Docker daemon
+	//    config file when you have a large number of ports. For more information,
+	//    see Issue #11185 (https://github.com/moby/moby/issues/11185) on the Github
+	//    website. For information about how to turn off the docker-proxy in the
+	//    Docker daemon config file, see Docker daemon (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/bootstrap_container_instance.html#bootstrap_docker_daemon)
+	//    in the Amazon ECS Developer Guide.
+	//
+	// You can call DescribeTasks (https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeTasks.html)
+	// to view the hostPortRange which are the host ports that are bound to the
+	// container ports.
+	ContainerPortRange *string `locationName:"containerPortRange" type:"string"`
+
 	// The port number on the host that's used with the network binding.
 	HostPort *int64 `locationName:"hostPort" type:"integer"`
+
+	// The port number range on the host that's used with the network binding. This
+	// is assigned is assigned by Docker and delivered by the Amazon ECS agent.
+	HostPortRange *string `locationName:"hostPortRange" type:"string"`
 
 	// The protocol used for the network binding.
 	Protocol *string `locationName:"protocol" type:"string" enum:"TransportProtocol"`
@@ -17136,9 +17292,21 @@ func (s *NetworkBinding) SetContainerPort(v int64) *NetworkBinding {
 	return s
 }
 
+// SetContainerPortRange sets the ContainerPortRange field's value.
+func (s *NetworkBinding) SetContainerPortRange(v string) *NetworkBinding {
+	s.ContainerPortRange = &v
+	return s
+}
+
 // SetHostPort sets the HostPort field's value.
 func (s *NetworkBinding) SetHostPort(v int64) *NetworkBinding {
 	s.HostPort = &v
+	return s
+}
+
+// SetHostPortRange sets the HostPortRange field's value.
+func (s *NetworkBinding) SetHostPortRange(v string) *NetworkBinding {
+	s.HostPortRange = &v
 	return s
 }
 
@@ -17663,7 +17831,62 @@ type PortMapping struct {
 	// the 100 reserved ports limit of a container instance.
 	ContainerPort *int64 `locationName:"containerPort" type:"integer"`
 
+	// The port number range on the container that's bound to the dynamically mapped
+	// host port range.
+	//
+	// The following rules apply when you specify a containerPortRange:
+	//
+	//    * You must use either the bridge network mode or the awsvpc network mode.
+	//
+	//    * This parameter is available for both the EC2 and Fargate launch types.
+	//
+	//    * This parameter is available for both the Linux and Windows operating
+	//    systems.
+	//
+	//    * The container instance must have at least version 1.67.0 of the container
+	//    agent and at least version 1.67.0-1 of the ecs-init package
+	//
+	//    * You can specify a maximum of 100 port ranges per container.
+	//
+	//    * You do not specify a hostPortRange. The value of the hostPortRange is
+	//    set as follows: For containers in a task with the awsvpc network mode,
+	//    the hostPort is set to the same value as the containerPort. This is a
+	//    static mapping strategy. For containers in a task with the bridge network
+	//    mode, the Amazon ECS agent finds open host ports from the default ephemeral
+	//    range and passes it to docker to bind them to the container ports.
+	//
+	//    * The containerPortRange valid values are between 1 and 65535.
+	//
+	//    * A port can only be included in one port mapping per container.
+	//
+	//    * You cannot specify overlapping port ranges.
+	//
+	//    * The first port in the range must be less than last port in the range.
+	//
+	//    * Docker recommends that you turn off the docker-proxy in the Docker daemon
+	//    config file when you have a large number of ports. For more information,
+	//    see Issue #11185 (https://github.com/moby/moby/issues/11185) on the Github
+	//    website. For information about how to turn off the docker-proxy in the
+	//    Docker daemon config file, see Docker daemon (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/bootstrap_container_instance.html#bootstrap_docker_daemon)
+	//    in the Amazon ECS Developer Guide.
+	//
+	// You can call DescribeTasks (https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DescribeTasks.html)
+	// to view the hostPortRange which are the host ports that are bound to the
+	// container ports.
+	ContainerPortRange *string `locationName:"containerPortRange" type:"string"`
+
 	// The port number on the container instance to reserve for your container.
+	//
+	// If you specify a containerPortRange, leave this field empty and the value
+	// of the hostPort is set as follows:
+	//
+	//    * For containers in a task with the awsvpc network mode, the hostPort
+	//    is set to the same value as the containerPort. This is a static mapping
+	//    strategy.
+	//
+	//    * For containers in a task with the bridge network mode, the Amazon ECS
+	//    agent finds open ports on the host and automaticaly binds them to the
+	//    container ports. This is a dynamic mapping strategy.
 	//
 	// If you use containers in a task with the awsvpc or host network mode, the
 	// hostPort can either be left blank or set to the same value as the containerPort.
@@ -17693,9 +17916,9 @@ type PortMapping struct {
 
 	// The name that's used for the port mapping. This parameter only applies to
 	// Service Connect. This parameter is the name that you use in the serviceConnectConfiguration
-	// of a service. Up to 64 characters are allowed. The characters can include
-	// lowercase letters, numbers, underscores (_), and hyphens (-). A hyphen can't
-	// be the first character.
+	// of a service. The name can include up to 64 characters. The characters can
+	// include lowercase letters, numbers, underscores (_), and hyphens (-). The
+	// name can't start with a hyphen.
 	//
 	// For more information, see Service Connect (https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-connect.html)
 	// in the Amazon Elastic Container Service Developer Guide.
@@ -17733,6 +17956,12 @@ func (s *PortMapping) SetAppProtocol(v string) *PortMapping {
 // SetContainerPort sets the ContainerPort field's value.
 func (s *PortMapping) SetContainerPort(v int64) *PortMapping {
 	s.ContainerPort = &v
+	return s
+}
+
+// SetContainerPortRange sets the ContainerPortRange field's value.
+func (s *PortMapping) SetContainerPortRange(v string) *PortMapping {
+	s.ContainerPortRange = &v
 	return s
 }
 
@@ -20424,13 +20653,13 @@ type ServiceConnectClientAlias struct {
 
 	// The dnsName is the name that you use in the applications of client tasks
 	// to connect to this service. The name must be a valid DNS name but doesn't
-	// need to be fully-qualified. Up to 127 characters are allowed. The characters
-	// can include lowercase letters, numbers, underscores (_), hyphens (-), and
-	// periods (.). A hyphen can't be the first character.
+	// need to be fully-qualified. The name can include up to 127 characters. The
+	// name can include lowercase letters, numbers, underscores (_), hyphens (-),
+	// and periods (.). The name can't start with a hyphen.
 	//
 	// If this parameter isn't specified, the default value of discoveryName.namespace
-	// is used. If the discoveryName isn't specified, the portName.namespace from
-	// the task definition is used.
+	// is used. If the discoveryName isn't specified, the port mapping name from
+	// the task definition is used in portName.namespace.
 	//
 	// To avoid changing your applications in client Amazon ECS services, set this
 	// to the same name that the client application uses by default. For example,
@@ -20559,7 +20788,7 @@ type ServiceConnectConfiguration struct {
 
 	// The list of Service Connect service objects. These are names and aliases
 	// (also known as endpoints) that are used by other Amazon ECS services to connect
-	// to this service. You can specify up to X (30?) objects per Amazon ECS service.
+	// to this service.
 	//
 	// This field is not required for a "client" Amazon ECS service that's a member
 	// of a namespace only to connect to other services within the namespace. An
@@ -20663,11 +20892,13 @@ type ServiceConnectService struct {
 
 	// The discoveryName is the name of the new Cloud Map service that Amazon ECS
 	// creates for this Amazon ECS service. This must be unique within the Cloud
-	// Map namespace. Up to 64 characters are allowed. The characters can include
-	// lowercase letters, numbers, underscores (_), and hyphens (-). A hyphen can't
-	// be the first character.
+	// Map namespace. The name can contain up to 64 characters. The name can include
+	// lowercase letters, numbers, underscores (_), and hyphens (-). The name can't
+	// start with a hyphen.
 	//
-	// If this field isn't specified, portName is used.
+	// If this parameter isn't specified, the default value of discoveryName.namespace
+	// is used. If the discoveryName isn't specified, the port mapping name from
+	// the task definition is used in portName.namespace.
 	DiscoveryName *string `locationName:"discoveryName" type:"string"`
 
 	// The port number for the Service Connect proxy to listen on.
@@ -20777,11 +21008,13 @@ type ServiceConnectServiceResource struct {
 	//
 	// The discoveryName is the name of the new Cloud Map service that Amazon ECS
 	// creates for this Amazon ECS service. This must be unique within the Cloud
-	// Map namespace. Up to 64 characters are allowed. The characters can include
-	// lowercase letters, numbers, underscores (_), and hyphens (-). A hyphen can't
-	// be the first character.
+	// Map namespace. The name can contain up to 64 characters. The name can include
+	// lowercase letters, numbers, underscores (_), and hyphens (-). The name can't
+	// start with a hyphen.
 	//
-	// If this field isn't specified, portName is used.
+	// If this parameter isn't specified, the default value of discoveryName.namespace
+	// is used. If the discoveryName isn't specified, the port mapping name from
+	// the task definition is used in portName.namespace.
 	DiscoveryName *string `locationName:"discoveryName" type:"string"`
 }
 
