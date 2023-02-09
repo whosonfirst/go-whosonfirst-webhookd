@@ -5,15 +5,16 @@ go 1.18
 require (
 	github.com/aaronland/go-aws-ecs v0.0.4
 	github.com/aaronland/go-aws-session v0.1.0
+	github.com/aaronland/go-log/v2 v2.0.0
 	github.com/aaronland/gocloud-blob-s3 v0.2.2
 	github.com/aws/aws-lambda-go v1.37.0
-	github.com/aws/aws-sdk-go v1.44.190
+	github.com/aws/aws-sdk-go v1.44.198
 	github.com/sfomuseum/go-flags v0.10.0
 	github.com/sfomuseum/runtimevar v1.0.4
-	github.com/whosonfirst/go-webhookd-aws/v2 v2.4.0
+	github.com/whosonfirst/go-webhookd-aws/v2 v2.4.1
 	github.com/whosonfirst/go-webhookd-github v1.2.0
 	github.com/whosonfirst/go-webhookd-gocloud v1.1.0
-	github.com/whosonfirst/go-webhookd/v3 v3.2.0
+	github.com/whosonfirst/go-webhookd/v3 v3.3.0
 	gocloud.dev v0.28.0
 )
 

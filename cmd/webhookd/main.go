@@ -28,13 +28,16 @@ import (
 
 import (
 	"context"
+	"log"
+	"os"
+	"strings"
+
+	aa_log "github.com/aaronland/go-log/v2"
 	"github.com/sfomuseum/go-flags/flagset"
 	"github.com/sfomuseum/runtimevar"
 	"github.com/whosonfirst/go-webhookd/v3/config"
 	"github.com/whosonfirst/go-webhookd/v3/daemon"
-	"log"
-	"os"
-	"strings"
+	
 )
 
 func main() {
@@ -45,18 +48,19 @@ func main() {
 
 	flagset.Parse(fs)
 
+	ctx := context.Background()
+	logger := log.Default()
+	
 	err := flagset.SetFlagsFromEnvVarsWithFeedback(fs, "WEBHOOKD", true)
 
 	if err != nil {
-		log.Fatalf("Failed to set flags from env vars, %v", err)
+		aa_log.Fatal(logger, "Failed to set flags from env vars, %v", err)
 	}
-
-	ctx := context.Background()
-
+	
 	str_cfg, err := runtimevar.StringVar(ctx, *config_uri)
 
 	if err != nil {
-		log.Fatalf("Failed to open runtimevar, %v", err)
+		aa_log.Fatal(logger, "Failed to open runtimevar, %v", err)
 	}
 
 	cfg_r := strings.NewReader(str_cfg)
@@ -64,19 +68,19 @@ func main() {
 	cfg, err := config.NewConfigFromReader(ctx, cfg_r)
 
 	if err != nil {
-		log.Fatalf("Failed to load config from reader, %v", err)
+		aa_log.Fatal(logger, "Failed to load config from reader, %v", err)
 	}
 
 	wh_daemon, err := daemon.NewWebhookDaemonFromConfig(ctx, cfg)
 
 	if err != nil {
-		log.Fatal(err)
+		aa_log.Fatal(logger, "Failed to create new webhookd, %v", err)
 	}
 
-	err = wh_daemon.Start(ctx)
+	err = wh_daemon.StartWithLogger(ctx, logger)
 
 	if err != nil {
-		log.Fatal(err)
+		aa_log.Fatal(logger, "Failed to serve requests, %v", err)
 	}
 
 	os.Exit(0)
