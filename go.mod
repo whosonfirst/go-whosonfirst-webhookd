@@ -3,18 +3,18 @@ module github.com/whosonfirst/go-whosonfirst-webhookd
 go 1.18
 
 require (
-	github.com/aaronland/go-aws-ecs v0.0.4
-	github.com/aaronland/go-aws-session v0.1.0
+	github.com/aaronland/go-aws-ecs v0.0.3
+	github.com/aaronland/go-aws-session v0.0.6
 	github.com/aaronland/go-log/v2 v2.0.0
-	github.com/aaronland/gocloud-blob-s3 v0.2.2
+	github.com/aaronland/gocloud-blob-s3 v0.2.1
 	github.com/aws/aws-lambda-go v1.37.0
 	github.com/aws/aws-sdk-go v1.44.198
 	github.com/sfomuseum/go-flags v0.10.0
-	github.com/sfomuseum/runtimevar v1.0.4
-	github.com/whosonfirst/go-webhookd-aws/v2 v2.4.1
+	github.com/sfomuseum/runtimevar v1.0.3
+	github.com/whosonfirst/go-webhookd-aws/v2 v2.4.0
 	github.com/whosonfirst/go-webhookd-github v1.2.0
 	github.com/whosonfirst/go-webhookd-gocloud v1.1.0
-	github.com/whosonfirst/go-webhookd/v3 v3.3.0
+	github.com/whosonfirst/go-webhookd/v3 v3.2.0
 	gocloud.dev v0.28.0
 )
 
@@ -56,11 +56,11 @@ require (
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
-	golang.org/x/sys v0.5.0 // indirect
-	golang.org/x/text v0.7.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.103.0 // indirect
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
