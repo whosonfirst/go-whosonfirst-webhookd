@@ -2,10 +2,9 @@ package receiver
 
 import (
 	"context"
+	"github.com/whosonfirst/go-webhookd/v3"
 	"io"
 	"net/http"
-
-	"github.com/whosonfirst/go-webhookd/v3"	
 )
 
 func init() {

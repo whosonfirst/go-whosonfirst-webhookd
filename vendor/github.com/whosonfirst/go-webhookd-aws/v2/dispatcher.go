@@ -7,16 +7,15 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
-	"net/url"
-	"regexp"
-	"strings"
-
 	"github.com/aaronland/go-aws-session"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/whosonfirst/go-webhookd/v3"
 	"github.com/whosonfirst/go-webhookd/v3/dispatcher"
+	"log"
+	"net/url"
+	"regexp"
+	"strings"
 )
 
 var preamble_re *regexp.Regexp

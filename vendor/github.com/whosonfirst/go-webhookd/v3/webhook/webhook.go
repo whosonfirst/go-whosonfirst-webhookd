@@ -3,7 +3,6 @@ package webhook
 
 import (
 	"context"
-	
 	"github.com/whosonfirst/go-webhookd/v3"
 )
 

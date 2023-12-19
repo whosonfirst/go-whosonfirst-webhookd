@@ -4,6 +4,13 @@ package daemon
 import (
 	"context"
 	"fmt"
+	"github.com/aaronland/go-http-server"
+	"github.com/whosonfirst/go-webhookd/v3"
+	"github.com/whosonfirst/go-webhookd/v3/config"
+	"github.com/whosonfirst/go-webhookd/v3/dispatcher"
+	"github.com/whosonfirst/go-webhookd/v3/receiver"
+	"github.com/whosonfirst/go-webhookd/v3/transformation"
+	"github.com/whosonfirst/go-webhookd/v3/webhook"
 	"log"
 	"net/http"
 	"net/url"
@@ -11,15 +18,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	aa_log "github.com/aaronland/go-log/v2"	
-	"github.com/aaronland/go-http-server"
-	"github.com/whosonfirst/go-webhookd/v3"
-	"github.com/whosonfirst/go-webhookd/v3/config"
-	"github.com/whosonfirst/go-webhookd/v3/dispatcher"
-	"github.com/whosonfirst/go-webhookd/v3/receiver"
-	"github.com/whosonfirst/go-webhookd/v3/transformation"
-	"github.com/whosonfirst/go-webhookd/v3/webhook"	
 )
 
 // type WebhookDaemon is a struct that implements a long-running daemon to listen for	and process webhooks.
@@ -227,7 +225,6 @@ func (d *WebhookDaemon) HandlerFuncWithLogger(logger *log.Logger) (http.HandlerF
 		wh, ok := d.webhooks[endpoint]
 
 		if !ok {
-			aa_log.Warning(logger, "Endpoint not found, %s", endpoint)
 			http.Error(rsp, "404 Not found", http.StatusNotFound)
 			return
 		}
@@ -255,10 +252,10 @@ func (d *WebhookDaemon) HandlerFuncWithLogger(logger *log.Logger) (http.HandlerF
 
 			switch err.Code {
 			case webhookd.UnhandledEvent, webhookd.HaltEvent:
-				aa_log.Info(logger, "Receiver step (%T)  returned non-fatal error and exiting, %v", rcvr, err)
+				logger.Printf("Receiver step (%T)  returned non-fatal error and exiting, %v", rcvr, err)
 				return
 			default:
-				aa_log.Error(logger, "Receiver step (%T) failed, %v", rcvr, err)
+				logger.Printf("Receiver step (%T) failed, %v", rcvr, err)
 				http.Error(rsp, err.Error(), err.Code)
 				return
 			}
@@ -278,10 +275,10 @@ func (d *WebhookDaemon) HandlerFuncWithLogger(logger *log.Logger) (http.HandlerF
 
 				switch err.Code {
 				case webhookd.UnhandledEvent, webhookd.HaltEvent:
-					aa_log.Info(logger, "Transformation step (%T) at offset %d returned non-fatal error and exiting, %v", step, idx, err)
+					logger.Printf("Transformation step (%T) at offset %d returned non-fatal error and exiting, %v", step, idx, err)
 					return
 				default:
-					aa_log.Error(logger, "Transformation step (%T) at offset %d failed, %v", step, idx, err)
+					logger.Printf("Transformation step (%T) at offset %d failed, %v", step, idx, err)
 					http.Error(rsp, err.Error(), err.Code)
 					return
 				}
@@ -316,10 +313,10 @@ func (d *WebhookDaemon) HandlerFuncWithLogger(logger *log.Logger) (http.HandlerF
 
 					switch err.Code {
 					case webhookd.UnhandledEvent, webhookd.HaltEvent:
-						aa_log.Info(logger, "Dispatch step (%T) at offset %d returned non-fatal error and exiting, %v", d, idx, err)
+						logger.Printf("Dispatch step (%T) at offset %d returned non-fatal error and exiting, %v", d, idx, err)
 						return
 					default:
-						aa_log.Error(logger, "Dispatch step (%T) at offset %d failed, %v", d, idx, err)
+						logger.Printf("Dispatch step (%T) at offset %d failed, %v", d, idx, err)
 						ch <- err
 					}
 				}
@@ -354,11 +351,6 @@ func (d *WebhookDaemon) HandlerFuncWithLogger(logger *log.Logger) (http.HandlerF
 
 		t2 := time.Since(t1)
 
-		aa_log.Debug(logger, "Time to receive: %v", ttr)
-		aa_log.Debug(logger, "Time to transform: %v", ttt)
-		aa_log.Debug(logger, "Time to dispatch: %v", ttd)
-		aa_log.Debug(logger, "Time to process: %v", t2)		
-		
 		rsp.Header().Set("X-Webhookd-Time-To-Receive", fmt.Sprintf("%v", ttr))
 		rsp.Header().Set("X-Webhookd-Time-To-Transform", fmt.Sprintf("%v", ttt))
 		rsp.Header().Set("X-Webhookd-Time-To-Dispatch", fmt.Sprintf("%v", ttd))
@@ -402,7 +394,7 @@ func (d *WebhookDaemon) StartWithLogger(ctx context.Context, logger *log.Logger)
 
 	svr := d.server
 
-	aa_log.Info(logger, "webhookd listening for requests on %s\n", svr.Address())
+	logger.Printf("webhookd listening for requests on %s\n", svr.Address())
 
 	err = svr.ListenAndServe(ctx, mux)
 
